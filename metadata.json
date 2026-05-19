@@ -1,0 +1,6 @@
+{
+  "name": "Papone dal 1956 - Foggia",
+  "description": "Sito ufficiale di Papone Dal 1956 - Steakhouse, pub, grill e birre artigianali a Foggia.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
