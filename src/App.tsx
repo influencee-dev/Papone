@@ -350,7 +350,7 @@ export default function App() {
         <div className="container">
           <div className="nav-container">
             <a href="#" onClick={(e) => { e.preventDefault(); setActiveTab("home"); window.scrollTo({ top: 0, behavior: "smooth" }); setMobileMenuOpen(false); }} style={{ display: "flex", alignItems: "center" }}>
-              <img src="/logo.png" alt="Papone Dal 1956" className="nav-logo" />
+              <img src="/logo.png" alt="Papone Dal 1956" className="nav-logo" referrerPolicy="no-referrer" />
             </a>
             
             <nav className="nav-menu hidden md:flex">
@@ -1130,7 +1130,7 @@ export default function App() {
             <div className="footer-col">
               <div style={{ display: "flex", alignItems: "center", gap: "15px", marginBottom: "20px" }}>
                 <a href="#" onClick={(e) => { e.preventDefault(); setActiveTab("home"); window.scrollTo({ top: 0, behavior: "smooth" }); }} style={{ display: "inline-block", cursor: "pointer" }}>
-                  <img src="/logo.png" alt="Logo Papone" className="footer-logo" style={{ marginBottom: 0 }} />
+                  <img src="/logo.png" alt="Logo Papone" className="footer-logo" style={{ marginBottom: 0 }} referrerPolicy="no-referrer" />
                 </a>
                 <p className="footer-tagline" style={{ marginBottom: 0 }}>Magnatill' n'emozion!</p>
               </div>

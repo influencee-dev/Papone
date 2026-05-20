@@ -140,6 +140,7 @@ app.post("/api/booking", (req, res) => {
             LASTNAME: cognome,
             SMS: tel
           },
+          listIds: [38],
           updateEnabled: true
         })
       })
