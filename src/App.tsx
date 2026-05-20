@@ -710,15 +710,15 @@ export default function App() {
                   <h4 className="bebas" style={{ color: "var(--color-accent)", marginBottom: "20px", fontSize: "1.5rem" }}>
                     Orari di Apertura
                   </h4>
-                  <div className="hour-row"><span>Lunedì</span><span>12:00 – 24:00</span></div>
-                  <div className="hour-row"><span>Martedì</span><span>12:00 – 24:00</span></div>
-                  <div className="hour-row"><span>Mercoledì</span><span>12:00 – 24:00</span></div>
-                  <div className="hour-row"><span>Giovedì</span><span>12:00 – 24:00</span></div>
-                  <div className="hour-row"><span>Venerdì</span><span>12:00 – 24:00</span></div>
-                  <div className="hour-row"><span>Sabato</span><span>12:00 – 24:00</span></div>
-                  <div className="hour-row"><span>Domenica</span><span>12:00 – 24:00</span></div>
+                  <div className="hour-row"><span>Lunedì</span><span style={{ color: "var(--color-accent)", fontWeight: "bold" }}>CHIUSO</span></div>
+                  <div className="hour-row"><span>Martedì</span><span>20:00 – 02:00</span></div>
+                  <div className="hour-row"><span>Mercoledì</span><span>20:00 – 02:00</span></div>
+                  <div className="hour-row"><span>Giovedì</span><span>20:00 – 02:00</span></div>
+                  <div className="hour-row"><span>Venerdì</span><span>20:00 – 02:00</span></div>
+                  <div className="hour-row"><span>Sabato</span><span>20:00 – 01:00</span></div>
+                  <div className="hour-row"><span>Domenica</span><span style={{ color: "var(--color-accent)", fontWeight: "bold" }}>CHIUSO</span></div>
                   <p style={{ marginTop: "20px", fontWeight: "bold", color: "var(--color-accent)", fontSize: "1.2rem" }} className="bebas">
-                    TUTTI I GIORNI
+                    MARTEDÌ – SABATO
                   </p>
                   
                   <div style={{ marginTop: "30px", display: "flex", flexWrap: "wrap", gap: "20px", color: "var(--color-text-muted)", fontSize: "0.9rem" }}>
@@ -1142,12 +1142,13 @@ export default function App() {
             {/* COLUMN 2 */}
             <div className="footer-col">
               <h4>Orari di Apertura</h4>
-              <ul className="footer-links">
-                <li className="text-neutral-200">Tutti i giorni</li>
-                <li style={{ fontSize: "1.2rem", color: "var(--color-text)" }}>12:00 – 24:00</li>
-                <li style={{ marginTop: "15px", color: "var(--color-accent)", fontWeight: "bold" }} className="bebas text-lg">
-                  Aperti a pranzo e cena
-                </li>
+              <ul className="footer-links" style={{ fontSize: "0.95rem" }}>
+                <li className="text-neutral-200">Martedì – Venerdì</li>
+                <li style={{ fontSize: "1.1rem", color: "var(--color-text)", marginBottom: "8px" }}>20:00 – 02:00</li>
+                <li className="text-neutral-200">Sabato</li>
+                <li style={{ fontSize: "1.1rem", color: "var(--color-text)", marginBottom: "8px" }}>20:00 – 01:00</li>
+                <li className="text-neutral-200">Domenica e Lunedì</li>
+                <li style={{ fontSize: "1.1rem", color: "var(--color-accent)", fontWeight: "bold" }}>CHIUSO</li>
               </ul>
             </div>
 
