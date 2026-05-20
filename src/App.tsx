@@ -158,6 +158,30 @@ export default function App() {
     }
   };
 
+  const scrollToMenuSection = (id: string) => {
+    setMobileMenuOpen(false);
+    if (activeTab !== "menu") {
+      setActiveTab("menu");
+      setTimeout(() => {
+        const el = document.getElementById(id);
+        if (el) {
+          window.scrollTo({
+            top: el.offsetTop - 90,
+            behavior: "smooth"
+          });
+        }
+      }, 100);
+    } else {
+      const el = document.getElementById(id);
+      if (el) {
+        window.scrollTo({
+          top: el.offsetTop - 90,
+          behavior: "smooth"
+        });
+      }
+    }
+  };
+
   return (
     <div className={activeTab === "home" ? "home-page-theme" : "menu-page-theme"}>
       
@@ -281,14 +305,14 @@ export default function App() {
             <nav className="nav-menu hidden md:flex">
               <a 
                 href="#home" 
-                onClick={(e) => { e.preventDefault(); setActiveTab("home"); }}
+                onClick={(e) => { e.preventDefault(); setActiveTab("home"); window.scrollTo({ top: 0, behavior: "smooth" }); }}
                 className={`nav-link ${activeTab === "home" ? "active" : ""}`}
               >
                 Home
               </a>
               <a 
                 href="#menu" 
-                onClick={(e) => { e.preventDefault(); setActiveTab("menu"); }}
+                onClick={(e) => { e.preventDefault(); setActiveTab("menu"); window.scrollTo({ top: 0, behavior: "smooth" }); }}
                 className={`nav-link ${activeTab === "menu" ? "active" : ""}`}
               >
                 Il Menu
@@ -312,14 +336,14 @@ export default function App() {
       <div className={`mobile-menu-overlay ${mobileMenuOpen ? "active" : ""}`} id="mobile-menu">
         <a 
           href="#home" 
-          onClick={(e) => { e.preventDefault(); setActiveTab("home"); setMobileMenuOpen(false); }} 
+          onClick={(e) => { e.preventDefault(); setActiveTab("home"); window.scrollTo({ top: 0, behavior: "smooth" }); setMobileMenuOpen(false); }} 
           className="mobile-link"
         >
           Home
         </a>
         <a 
           href="#menu" 
-          onClick={(e) => { e.preventDefault(); setActiveTab("menu"); setMobileMenuOpen(false); }} 
+          onClick={(e) => { e.preventDefault(); setActiveTab("menu"); window.scrollTo({ top: 0, behavior: "smooth" }); setMobileMenuOpen(false); }} 
           className="mobile-link"
         >
           Il Menu
@@ -349,7 +373,7 @@ export default function App() {
                 Pub, grill e steakhouse nel cuore di Foggia. Carne selezionata, birre artigianali e atmosfera unica dal 1956.
               </p>
               <div className="hero-btns">
-                <a href="#menu" onClick={(e) => { e.preventDefault(); setActiveTab("menu"); }} className="btn btn-primary">
+                <a href="#menu" onClick={(e) => { e.preventDefault(); setActiveTab("menu"); window.scrollTo({ top: 0, behavior: "smooth" }); }} className="btn btn-primary">
                   Scopri il Menu
                 </a>
                 <a href="#prenota" onClick={(e) => { e.preventDefault(); scrollToSection("prenota"); }} className="btn btn-primary">
@@ -357,7 +381,7 @@ export default function App() {
                 </a>
               </div>
             </div>
-            <div className="scroll-down">
+            <div className="scroll-down" onClick={() => scrollToSection("storia")} style={{ cursor: "pointer" }} title="Scorri giù">
               <i className="fas fa-chevron-down"></i>
             </div>
           </section>
@@ -383,7 +407,7 @@ export default function App() {
 
               <div className="menu-cards">
                 {/* Card 1 */}
-                <div className="menu-card" style={{ backgroundImage: "url('/steakhouse.png')" }}>
+                <div className="menu-card" onClick={() => scrollToMenuSection("menu-steakhouse")} style={{ backgroundImage: "url('/steakhouse.png')" }}>
                   <div className="menu-card-overlay"></div>
                   <h3>STEAKHOUSE</h3>
                   <p style={{ color: "var(--color-text)" }}>
@@ -391,7 +415,7 @@ export default function App() {
                   </p>
                 </div>
                 {/* Card 2 */}
-                <div className="menu-card" style={{ backgroundImage: "url('/burger&panini.png')" }}>
+                <div className="menu-card" onClick={() => scrollToMenuSection("menu-burger")} style={{ backgroundImage: "url('/burger&panini.png')" }}>
                   <div className="menu-card-overlay"></div>
                   <h3>BURGER & PANINI</h3>
                   <p style={{ color: "var(--color-text)" }}>
@@ -399,7 +423,7 @@ export default function App() {
                   </p>
                 </div>
                 {/* Card 3 */}
-                <div className="menu-card" style={{ backgroundImage: "url('/antipasti&grill.png')" }}>
+                <div className="menu-card" onClick={() => scrollToMenuSection("menu-antipasti")} style={{ backgroundImage: "url('/antipasti&grill.png')" }}>
                   <div className="menu-card-overlay"></div>
                   <h3>ANTIPASTI & GRILL</h3>
                   <p style={{ color: "var(--color-text)" }}>
@@ -407,7 +431,7 @@ export default function App() {
                   </p>
                 </div>
                 {/* Card 4 */}
-                <div className="menu-card" style={{ backgroundImage: "url('/birreartigianali.png')" }}>
+                <div className="menu-card" onClick={() => scrollToMenuSection("menu-birre")} style={{ backgroundImage: "url('/birreartigianali.png')" }}>
                   <div className="menu-card-overlay"></div>
                   <h3>BIRRE ARTIGIANALI</h3>
                   <p style={{ color: "var(--color-text)" }}>
@@ -417,7 +441,7 @@ export default function App() {
               </div>
 
               <div className="menu-cta-wrap" style={{ display: 'flex', justifyContent: 'center', marginTop: '40px' }}>
-                <a href="#menu" onClick={(e) => { e.preventDefault(); setActiveTab("menu"); }} className="btn btn-primary" style={{ padding: "15px 45px", fontSize: "1.3rem" }}>
+                <a href="#menu" onClick={(e) => { e.preventDefault(); setActiveTab("menu"); window.scrollTo({ top: 0, behavior: "smooth" }); }} className="btn btn-primary" style={{ padding: "15px 45px", fontSize: "1.3rem" }}>
                   Visualizza il menu completo
                 </a>
               </div>
@@ -691,7 +715,7 @@ export default function App() {
             <div className="container">
               
               {/* CATEGORIA 1: ANTIPASTI */}
-              <div className="menu-category">
+              <div className="menu-category" id="menu-antipasti">
                 <h2 className="category-title border-b-2">Gli Antipasti</h2>
                 <div className="menu-grid">
                   <div className="menu-item">
@@ -720,7 +744,7 @@ export default function App() {
               </div>
 
               {/* CATEGORIA 2: STEAKHOUSE */}
-              <div className="menu-category">
+              <div className="menu-category" id="menu-steakhouse">
                 <h2 className="category-title border-b-2">Steakhouse</h2>
                 <div className="menu-grid">
                   <div className="menu-item">
@@ -760,7 +784,7 @@ export default function App() {
               </div>
 
               {/* CATEGORIA 3: I NOSTRI BURGER */}
-              <div className="menu-category">
+              <div className="menu-category" id="menu-burger">
                 <h2 className="category-title border-b-2">I Nostri Burger</h2>
                 <div className="menu-grid">
                   <div className="menu-item">
@@ -800,7 +824,7 @@ export default function App() {
               </div>
 
               {/* CATEGORIA 4: BIRRE ARTIGIANALI */}
-              <div className="menu-category">
+              <div className="menu-category" id="menu-birre">
                 <h2 className="category-title border-b-2">Birre Artigianali</h2>
                 <div className="menu-grid">
                   <div className="menu-item">
@@ -852,10 +876,12 @@ export default function App() {
             
             {/* COLUMN 1 */}
             <div className="footer-col">
-              <a href="#" onClick={(e) => { e.preventDefault(); setActiveTab("home"); window.scrollTo({ top: 0, behavior: "smooth" }); }} style={{ display: "inline-block", cursor: "pointer" }}>
-                <img src="/logo.png" alt="Logo Papone" className="footer-logo" />
-              </a>
-              <p className="footer-tagline">Magnatill' n'emozion!</p>
+              <div style={{ display: "flex", alignItems: "center", gap: "15px", marginBottom: "20px" }}>
+                <a href="#" onClick={(e) => { e.preventDefault(); setActiveTab("home"); window.scrollTo({ top: 0, behavior: "smooth" }); }} style={{ display: "inline-block", cursor: "pointer" }}>
+                  <img src="/logo.png" alt="Logo Papone" className="footer-logo" style={{ marginBottom: 0 }} />
+                </a>
+                <p className="footer-tagline" style={{ marginBottom: 0 }}>Magnatill' n'emozion!</p>
+              </div>
               <p style={{ color: "white" }}>
                 Pub e steakhouse a Foggia dal 1956. Un'istituzione del gusto e della convivialità.
               </p>
