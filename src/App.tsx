@@ -299,7 +299,7 @@ export default function App() {
         <div className="container">
           <div className="nav-container">
             <a href="#" onClick={(e) => { e.preventDefault(); setActiveTab("home"); window.scrollTo({ top: 0, behavior: "smooth" }); setMobileMenuOpen(false); }} style={{ display: "flex", alignItems: "center" }}>
-              <img src="logo.png" alt="Papone Dal 1956" className="nav-logo" />
+              <img src="/logo.png" alt="Papone Dal 1956" className="nav-logo" />
             </a>
             
             <nav className="nav-menu hidden md:flex">
