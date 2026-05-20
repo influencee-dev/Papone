@@ -14,10 +14,61 @@ interface Booking {
 }
 
 export default function App() {
-  const [activeTab, setActiveTab] = useState<"home" | "menu">("home");
+  const [activeTab, setActiveTab] = useState<"home" | "menu" | "privacy" | "cookie">("home");
   const [showAdmin, setShowAdmin] = useState(false);
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  
+  // Cookie Consent States
+  const [showCookieModal, setShowCookieModal] = useState(false);
+  const [showCookieBanner, setShowCookieBanner] = useState(false);
+  const [cookieConsent, setCookieConsent] = useState<{
+    necessari: boolean;
+    statistici: boolean;
+    marketing: boolean;
+    sceltaCompletata: boolean;
+  }>({
+    necessari: true,
+    statistici: false,
+    marketing: false,
+    sceltaCompletata: false
+  });
+
+  const [tempStatistici, setTempStatistici] = useState(false);
+  const [tempMarketing, setTempMarketing] = useState(false);
+
+  useEffect(() => {
+    // Caricamento preferenze cookie salvate
+    const savedConsent = localStorage.getItem("papone_cookie_consent");
+    if (savedConsent) {
+      const parsed = JSON.parse(savedConsent);
+      setCookieConsent(parsed);
+      setTempStatistici(parsed.statistici);
+      setTempMarketing(parsed.marketing);
+    } else {
+      setShowCookieBanner(true);
+    }
+  }, []);
+
+  const saveCookiePreferences = (necessari: boolean, statistici: boolean, marketing: boolean) => {
+    const newConsent = {
+      necessari,
+      statistici,
+      marketing,
+      sceltaCompletata: true
+    };
+    localStorage.setItem("papone_cookie_consent", JSON.stringify(newConsent));
+    setCookieConsent(newConsent);
+    setShowCookieBanner(false);
+    setShowCookieModal(false);
+  };
+
+  useEffect(() => {
+    if (showCookieModal) {
+      setTempStatistici(cookieConsent.statistici);
+      setTempMarketing(cookieConsent.marketing);
+    }
+  }, [showCookieModal, cookieConsent]);
   
   // Booking Form State
   const [formData, setFormData] = useState({
@@ -868,6 +919,207 @@ export default function App() {
         </>
       )}
 
+      {/* ======================= PRIVACY POLICY VIEW ======================= */}
+      {activeTab === "privacy" && (
+        <section className="section-padding bg-neutral-900 text-white min-h-screen pt-32 pb-24">
+          <div className="container max-w-4xl mx-auto px-4">
+            <div className="mb-12 text-center md:text-left">
+              <span className="section-label bebas text-amber-400 tracking-wider">INFORMATIVA SULLA PRIVACY</span>
+              <h1 className="text-4xl font-extrabold mt-2 text-white font-sans tracking-tight">Privacy Policy</h1>
+              <p className="text-sm text-neutral-400 font-mono mt-2">Ultimo aggiornamento: 20 maggio 2026</p>
+            </div>
+            
+            <div className="prose prose-invert max-w-none text-neutral-300 space-y-8 font-sans leading-relaxed">
+              <div>
+                <h3 className="text-xl font-bold font-mono text-amber-400 mb-3 uppercase tracking-wider">1. Titolare del Trattamento</h3>
+                <p>
+                  Il titolare del trattamento dei dati personali raccolti attraverso questo sito internet è la ditta titolare del marchio 
+                  <strong> "Papone Dal 1956"</strong> situato in <em>Via Trinitapoli 24, 71121 Foggia FG, Italia</em>. Per qualsiasi richiesta o informazione in merito alla gestione dei tuoi dati, è possibile scrivere all'indirizzo email: <a href="mailto:alessandro_doc@live.it" className="text-amber-400 underline hover:text-amber-500 transition">alessandro_doc@live.it</a>.
+                </p>
+              </div>
+
+              <div>
+                <h3 className="text-xl font-bold font-mono text-amber-400 mb-3 uppercase tracking-wider">2. Tipologia di Dati Raccolti</h3>
+                <p>
+                  Quando compili il nostro modulo di prenotazione o richiedi informazioni sul sito, raccogliamo le seguenti informazioni essenziali fornite volontariamente:
+                </p>
+                <ul className="list-disc list-inside mt-3 space-y-2 text-neutral-300 pl-4">
+                  <li><strong>Nome e Cognome:</strong> Necessari per identificare la prenotazione del tavolo.</li>
+                  <li><strong>Numero di Telefono:</strong> Utilizzato per confermare o comunicare variazioni sulla prenotazione tramite contatto telefonico o WhatsApp.</li>
+                  <li><strong>Indirizzo Email:</strong> Usato facoltativamente per l'invio della notifica di riepilogo e ai fini della gestione dei contatti.</li>
+                  <li><strong>Numero di Coperti e Note speciali:</strong> Necessari per organizzare la sala in base alle preferenze o alle intolleranze alimentari segnalate.</li>
+                </ul>
+              </div>
+
+              <div>
+                <h3 className="text-xl font-bold font-mono text-amber-400 mb-3 uppercase tracking-wider">3. Finalità e Base Giuridica del Trattamento</h3>
+                <p>
+                  I dati raccolti vengono trattati per le seguenti finalità:
+                </p>
+                <ul className="list-disc list-inside mt-3 space-y-2 text-neutral-300 pl-4">
+                  <li>Adempiere alle richieste di prenotazione inoltrate dall'utente (gestione del tavolo, conferma e recapito).</li>
+                  <li>Inviare comunicazioni di conferma tramite email e integrare il contatto con i nostri servizi interni ed SMS/notifiche automatiche di conferma della prenotazione tramite Brevo.</li>
+                  <li>Fornire il link rapido per l'inoltro diretto guidato via WhatsApp al numero dell'attività.</li>
+                </ul>
+                <p className="mt-4">
+                  La base giuridica di questo trattamento è l'esecuzione di misure precontrattuali e contrattuali (la richiesta di prenotazione del tavolo effettuata dall'utente) e il legittimo interesse del titolare a rispondere alle richieste di contatto.
+                </p>
+              </div>
+
+              <div>
+                <h3 className="text-xl font-bold font-mono text-amber-400 mb-3 uppercase tracking-wider">4. Destinatari dei Dati e Terze Parti</h3>
+                <p>
+                  I tuoi dati personali non vengono venduti o scambiati a scopo di marketing o profilazione da parte di terzi. Tuttavia, per il funzionamento sicuro del servizio, ci avvaliamo delle seguenti piattaforme:
+                </p>
+                <ul className="list-disc list-inside mt-3 space-y-2 text-neutral-300 pl-4">
+                  <li><strong>Server hosting e infrastrutture Cloud:</strong> Per ospitare l'applicazione in modo sicuro.</li>
+                  <li><strong>WhatsApp (Meta Platforms, Inc.):</strong> Il servizio consente di reindirizzare i dettagli della prenotazione sul vostro account per completare l'invio del messaggio di prenotazione guidato.</li>
+                  <li><strong>Brevo (Sendinblue):</strong> Se configurato, per la spedizione di notifiche automatiche via email relative alle richieste ricevute.</li>
+                </ul>
+              </div>
+
+              <div>
+                <h3 className="text-xl font-bold font-mono text-amber-400 mb-3 uppercase tracking-wider">5. Durata della Conservazione dei Dati</h3>
+                <p>
+                  I dati relativi alle prenotazioni vengono conservati in un database locale cifrato sul server al fine di consentire ai gestori dell'attività di approvare o rifiutare la richiesta e tenere un registro della disponibilità. I dati vengono conservati per il tempo strettamente necessario all'esecuzione del servizio richiesto (solitamente non oltre 12 mesi dalla data della consumazione, salvo obblighi di legge o richieste esplicite di cancellazione da parte dell'utente).
+                </p>
+              </div>
+
+              <div>
+                <h3 className="text-xl font-bold font-mono text-amber-400 mb-3 uppercase tracking-wider">6. Diritti degli Interessati</h3>
+                <p>
+                  In conformità con il Regolamento Generale sulla Protezione dei Dati (GDPR - Regolamento UE 2016/679), l'utente ha il diritto in qualunque momento di:
+                </p>
+                <ul className="list-disc list-inside mt-3 space-y-2 text-neutral-300 pl-4">
+                  <li>Ottenere la conferma dell'esistenza di dati personali che lo riguardano e accedervi.</li>
+                  <li>Richiedere la rettifica, la cancellazione o la limitazione del trattamento dei dati.</li>
+                  <li>Opporsi al trattamento in qualsiasi momento per motivi legittimi.</li>
+                  <li>Ottenere la portabilità dei dati o revocare il consenso prestato in qualsiasi momento.</li>
+                </ul>
+                <p className="mt-4">
+                  Per esercitare tali diritti, puoi contattare comodamente il titolare all'indirizzo email <a href="mailto:alessandro_doc@live.it" className="text-amber-400 underline hover:text-amber-500 transition">alessandro_doc@live.it</a>. Risponderemo tempestivamente a ogni tua richiesta.
+                </p>
+              </div>
+            </div>
+            
+            <div className="mt-16 text-center">
+              <button 
+                onClick={() => { setActiveTab("home"); window.scrollTo({ top: 0, behavior: "smooth" }); }}
+                className="btn btn-primary bebas px-8 py-3.5"
+                style={{ fontSize: "1.2rem", letterSpacing: "1px" }}
+              >
+                TORNA ALLA HOME PAGE
+              </button>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* ======================= COOKIE POLICY VIEW ======================= */}
+      {activeTab === "cookie" && (
+        <section className="section-padding bg-neutral-900 text-white min-h-screen pt-32 pb-24">
+          <div className="container max-w-4xl mx-auto px-4">
+            <div className="mb-12 text-center md:text-left">
+              <span className="section-label bebas text-amber-400 tracking-wider">GESTIONE DEI COOKIE</span>
+              <h1 className="text-4xl font-extrabold mt-2 text-white font-sans tracking-tight">Cookie Policy</h1>
+              <p className="text-sm text-neutral-400 font-mono mt-2">Ultimo aggiornamento: 20 maggio 2026</p>
+            </div>
+            
+            <div className="prose prose-invert max-w-none text-neutral-300 space-y-8 font-sans leading-relaxed">
+              <div>
+                <h3 className="text-xl font-bold font-mono text-amber-400 mb-3 uppercase tracking-wider">1. Cosa sono i Cookie</h3>
+                <p>
+                  I cookie sono piccoli file di testo che i siti visitati inviano e registrano sul computer o dispositivo mobile dell'utente, per essere poi ritrasmessi agli stessi siti alla visita successiva. Grazie ai cookie, il sito ricorda le tue azioni e preferenze (come dettagli di visualizzazione, impostazioni, consensi) in modo che tu non debba reinserirle quando ritorni sul sito o navighi da una pagina all'altra.
+                </p>
+              </div>
+
+              <div>
+                <h3 className="text-xl font-bold font-mono text-amber-400 mb-3 uppercase tracking-wider">2. Come utilizziamo i Cookie</h3>
+                <p>
+                  Il sito di Papone Dal 1956 utilizza i cookie per migliorare l'esperienza utente, permettere il funzionamento del carrello o dei moduli di prenotazione, ricordare lo stato del consenso relativo ai cookie stessi e proteggere l'infrastruttura di rete.
+                </p>
+                <p className="mt-3">
+                  I cookie si dividono comunemente in cookie di prima parte (installati direttamente dal gestore del sito) e cookie di terza parte (installati da servizi esterni integrati nel sito).
+                </p>
+              </div>
+
+              <div>
+                <h3 className="text-xl font-bold font-mono text-amber-400 mb-3 uppercase tracking-wider">3. Tipologie di Cookie usati su questo Sito</h3>
+                <p className="mb-4">
+                  Puoi decidere in qualsiasi momento quali categorie abilitare attraverso lo strumento di gestione disponibile in questa pagina o tramite il link nel footer.
+                </p>
+                
+                <div className="space-y-4">
+                  <div className="p-5 rounded-2xl bg-neutral-950 border border-neutral-800">
+                    <div className="flex justify-between items-center mb-2">
+                      <span className="font-bold text-white text-lg">A. Cookie Tecnici / Necessari (Sempre Attivi)</span>
+                      <span className="text-xs bg-green-950 text-green-400 border border-green-800 px-3 py-1 rounded-full font-bold uppercase">Obbligatori</span>
+                    </div>
+                    <p className="text-sm text-neutral-400 leading-relaxed">
+                      Questi cookie sono essenziali per il corretto funzionamento del sito. Includono, ad esempio, i file di sessione che tengono traccia della compilazione dei moduli di prenotazione, dello stato del consenso relativo ai cookie (per non mostrare nuovamente il banner ad ogni pagina). Senza questi cookie, parti del sito non funzionerebbero correttamente.
+                    </p>
+                  </div>
+
+                  <div className="p-5 rounded-2xl bg-neutral-950 border border-neutral-800">
+                    <div className="flex justify-between items-center mb-4">
+                      <span className="font-bold text-white text-lg">B. Cookie Statistici / Analitici (Opzionali)</span>
+                      <span className={`text-xs px-3 py-1 rounded-full font-bold uppercase ${cookieConsent.statistici ? "bg-green-950 text-green-400 border border-green-800" : "bg-neutral-800 text-neutral-400 border border-neutral-700"}`}>
+                        {cookieConsent.statistici ? "Attivi (Abilitati)" : "Disattivi"}
+                      </span>
+                    </div>
+                    <p className="text-sm text-neutral-400 leading-relaxed">
+                      Questi cookie raccolgono informazioni in forma anonima e aggregata sull'utilizzo del sito da parte degli utenti (ad esempio: quali pagine vengono visitate più spesso, tempo di permanenza sul sito, origini di provenienza del traffico). Utilizziamo questi dati solo per scopi statistici e per ottimizzare la stesura dei contenuti e la velocità di caricamento delle pagine.
+                    </p>
+                  </div>
+
+                  <div className="p-5 rounded-2xl bg-neutral-950 border border-neutral-800">
+                    <div className="flex justify-between items-center mb-4">
+                      <span className="font-bold text-white text-lg">C. Cookie di Profilazione o Marketing (Opzionali)</span>
+                      <span className={`text-xs px-3 py-1 rounded-full font-bold uppercase ${cookieConsent.marketing ? "bg-green-950 text-green-400 border border-green-800" : "bg-neutral-800 text-neutral-400 border border-neutral-700"}`}>
+                        {cookieConsent.marketing ? "Attivi (Abilitati)" : "Disattivi"}
+                      </span>
+                    </div>
+                    <p className="text-sm text-neutral-400 leading-relaxed">
+                      Questi cookie permettono di integrare servizi forniti da terze parti che potrebbero raccogliere informazioni sulla navigazione allo scopo di mostrare annunci pubblicitari pertinenti o tracciare interazioni con elementi social inseriti nelle pagine (come la visualizzazione di mappe incorporate Google Maps o video).
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <h3 className="text-xl font-bold font-mono text-amber-400 mb-3 uppercase tracking-wider">4. Come modificare le preferenze cookie dal Browser</h3>
+                <p>
+                  La maggior parte dei browser moderni consente di configurare la modalità di accettazione o blocco generale dei cookie. Ecco i collegamenti alle guide ufficiali dei browser principali:
+                </p>
+                <ul className="list-disc list-inside mt-3 space-y-1 text-neutral-300 text-sm pl-4">
+                  <li><a href="https://support.google.com/chrome/answer/95647" target="_blank" rel="noopener noreferrer" className="text-amber-400 underline hover:text-amber-500">Google Chrome</a></li>
+                  <li><a href="https://support.mozilla.org/it/kb/Attivare%20e%20disattivare%20i%20cookie" target="_blank" rel="noopener noreferrer" className="text-amber-400 underline hover:text-amber-500">Mozilla Firefox</a></li>
+                  <li><a href="https://support.apple.com/it-it/guide/safari/sfri11471/mac" target="_blank" rel="noopener noreferrer" className="text-amber-400 underline hover:text-amber-500">Apple Safari</a></li>
+                  <li><a href="https://support.microsoft.com/it-it/microsoft-edge/eliminare-e-gestire-i-cookie-in-microsoft-edge-168dab11-0753-043d-7c16-ede5947fc64d" target="_blank" rel="noopener noreferrer" className="text-amber-400 underline hover:text-amber-500">Microsoft Edge</a></li>
+                </ul>
+              </div>
+            </div>
+            
+            <div className="mt-16 flex flex-col sm:flex-row gap-4 justify-center">
+              <button 
+                onClick={() => setShowCookieModal(true)}
+                className="btn btn-primary bebas px-8 py-3.5"
+                style={{ fontSize: "1.2rem", letterSpacing: "1px" }}
+              >
+                <i className="fas fa-cog mr-2 text-sm"></i> GESTISCI PREFERENZE PERSONALI
+              </button>
+              <button 
+                onClick={() => { setActiveTab("home"); window.scrollTo({ top: 0, behavior: "smooth" }); }}
+                className="px-8 py-3.5 bg-neutral-800 hover:bg-neutral-700 text-white border border-neutral-700 rounded-xl transition text-center font-bold bebas"
+                style={{ fontSize: "1.2rem", letterSpacing: "1px", cursor: "pointer" }}
+              >
+                TORNA ALLA HOME PAGE
+              </button>
+            </div>
+          </div>
+        </section>
+      )}
+
 
       {/* ======================= REUSABLE FOOTER ======================= */}
       <footer>
@@ -962,13 +1214,188 @@ export default function App() {
           <div className="footer-bottom">
             <p>&copy; {new Date().getFullYear()} Papone Dal 1956. Tutti i diritti riservati.</p>
             <div className="footer-legal">
-              <a href="#" onClick={(e) => e.preventDefault()}>Privacy Policy</a>
-              <a href="#" onClick={(e) => e.preventDefault()}>Cookie Policy</a>
-              <a href="#" onClick={(e) => e.preventDefault()}>Gestisci preferenze cookie</a>
+              <a 
+                href="#privacy" 
+                onClick={(e) => { 
+                  e.preventDefault(); 
+                  setActiveTab("privacy"); 
+                  window.scrollTo({ top: 0, behavior: "smooth" }); 
+                }}
+                className={activeTab === "privacy" ? "text-amber-400 font-bold" : ""}
+              >
+                Privacy Policy
+              </a>
+              <a 
+                href="#cookie" 
+                onClick={(e) => { 
+                  e.preventDefault(); 
+                  setActiveTab("cookie"); 
+                  window.scrollTo({ top: 0, behavior: "smooth" }); 
+                }}
+                className={activeTab === "cookie" ? "text-amber-400 font-bold" : ""}
+              >
+                Cookie Policy
+              </a>
+              <a 
+                href="#gestisci-cookie" 
+                onClick={(e) => { 
+                  e.preventDefault(); 
+                  setShowCookieModal(true); 
+                }}
+                className="hover:text-amber-400 cursor-pointer"
+              >
+                Gestisci preferenze cookie
+              </a>
             </div>
           </div>
         </div>
       </footer>
+
+      {/* ======================= COOKIE CONSENT BANNER ======================= */}
+      {showCookieBanner && (
+        <div className="fixed bottom-4 left-4 right-4 md:left-auto md:right-4 md:max-w-md bg-neutral-950/95 backdrop-blur-md border border-neutral-800 text-white p-6 rounded-2xl shadow-2xl z-40 animate-fade-in font-sans">
+          <div className="flex items-center gap-3 mb-3">
+            <div className="w-8 h-8 rounded-full bg-amber-500/20 text-amber-400 flex items-center justify-center">
+              <i className="fas fa-cookie-bite"></i>
+            </div>
+            <h5 className="font-bold font-mono text-lg text-white">Informativa sui Cookie</h5>
+          </div>
+          <p className="text-xs text-neutral-300 leading-relaxed mb-4">
+            Utilizziamo cookie tecnici essenziali per il corretto funzionamento del sito. Con il tuo consenso, vorremmo utilizzare anche cookie analitici anonimi e di profilazione marketing terzi per migliorare la tua esperienza.
+          </p>
+          <div className="flex flex-col gap-2">
+            <button 
+              onClick={() => saveCookiePreferences(true, true, true)}
+              className="w-full bg-amber-500 hover:bg-amber-400 text-neutral-950 font-bold py-2.5 rounded-xl transition cursor-pointer bebas text-sm tracking-wider"
+            >
+              ACCETTA TUTTI I COOKIE
+            </button>
+            <div className="grid grid-cols-2 gap-2">
+              <button 
+                onClick={() => saveCookiePreferences(true, false, false)}
+                className="bg-neutral-800 hover:bg-neutral-700 text-white font-bold py-2 rounded-xl transition cursor-pointer bebas text-sm tracking-wider"
+              >
+                SOLO NECESSARI
+              </button>
+              <button 
+                onClick={() => {
+                  setShowCookieBanner(false);
+                  setShowCookieModal(true);
+                }}
+                className="border border-neutral-700 hover:bg-neutral-900 text-white font-bold py-2 rounded-xl transition cursor-pointer bebas text-sm tracking-wider"
+              >
+                PERSONALIZZA
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ======================= COOKIE PREFERENCES MODAL ======================= */}
+      {showCookieModal && (
+        <div className="fixed inset-0 bg-black/85 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="w-full max-w-xl bg-neutral-950 border border-neutral-800 text-white p-6 md:p-8 rounded-2xl shadow-2xl font-sans relative animate-fade-in">
+            <button 
+              onClick={() => setShowCookieModal(false)}
+              className="absolute top-4 right-4 text-neutral-400 hover:text-white bg-neutral-900/50 hover:bg-neutral-900 w-8 h-8 rounded-full flex items-center justify-center transition border border-neutral-800"
+              title="Chiudi"
+            >
+              <i className="fas fa-times"></i>
+            </button>
+
+            <div className="mb-6">
+              <span className="text-xs font-bold font-mono text-amber-400 tracking-wider">PREFERENZE COOKIE</span>
+              <h3 className="text-2xl font-black mt-1 font-sans text-white">Gestisci i Cookie</h3>
+              <p className="text-xs text-neutral-400 mt-1">
+                Personalizza le impostazioni relative alla tua privacy di navigazione per il sito di Papone.
+              </p>
+            </div>
+
+            <div className="space-y-4 max-h-[60vh] overflow-y-auto pr-2">
+              {/* Category 1 */}
+              <div className="p-4 rounded-xl bg-neutral-900 border border-neutral-800 flex items-start justify-between gap-4">
+                <div className="space-y-1">
+                  <div className="flex items-center gap-2">
+                    <span className="font-bold text-white text-sm">Cookie Tecnici / Essenziali</span>
+                    <span className="text-[10px] bg-green-950 text-green-400 border border-green-800 px-2 py-0.5 rounded-full font-bold uppercase">Sempre Attivi</span>
+                  </div>
+                  <p className="text-xs text-neutral-400 leading-relaxed">
+                    Indispensabili per navigare sul sito, registrare i vostri consensi e consentire l'utilizzo sicuro dei moduli di prenotazione. Non possono essere disattivati.
+                  </p>
+                </div>
+                <div className="shrink-0 pt-1">
+                  <input type="checkbox" checked disabled className="w-4 h-4 accent-amber-500 opacity-60" />
+                </div>
+              </div>
+
+              {/* Category 2 */}
+              <div 
+                className="p-4 rounded-xl bg-neutral-900 border border-neutral-800 flex items-start justify-between gap-4 cursor-pointer hover:border-neutral-700 transition"
+                onClick={() => setTempStatistici(!tempStatistici)}
+              >
+                <div className="space-y-1">
+                  <span className="font-bold text-white text-sm">Cookie Statistici / Analitici</span>
+                  <p className="text-xs text-neutral-400 leading-relaxed">
+                    Ci consentono di misurare il numero di visite e analizzare le fonti del traffico in modo del tutto aggregato e anonimo. Se disattivati non potremo ottimizzare l'esperienza di navigazione.
+                  </p>
+                </div>
+                <div className="shrink-0 pt-1" onClick={(e) => e.stopPropagation()}>
+                  <input 
+                    type="checkbox" 
+                    id="consent-statistici"
+                    checked={tempStatistici} 
+                    onChange={(e) => setTempStatistici(e.target.checked)} 
+                    className="w-4 h-4 accent-amber-500 cursor-pointer" 
+                  />
+                </div>
+              </div>
+
+              {/* Category 3 */}
+              <div 
+                className="p-4 rounded-xl bg-neutral-900 border border-neutral-800 flex items-start justify-between gap-4 cursor-pointer hover:border-neutral-700 transition"
+                onClick={() => setTempMarketing(!tempMarketing)}
+              >
+                <div className="space-y-1">
+                  <span className="font-bold text-white text-sm">Cookie di Profilazione e Marketing</span>
+                  <p className="text-xs text-neutral-400 leading-relaxed">
+                    Utilizzati da partner terzi (come Google Maps incorporata) per fornirti contenuti pertinenti ed elementi social integrati adatti alle tue preferenze di navigazione.
+                  </p>
+                </div>
+                <div className="shrink-0 pt-1" onClick={(e) => e.stopPropagation()}>
+                  <input 
+                    type="checkbox" 
+                    id="consent-marketing"
+                    checked={tempMarketing} 
+                    onChange={(e) => setTempMarketing(e.target.checked)} 
+                    className="w-4 h-4 accent-amber-500 cursor-pointer" 
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-8 pt-4 border-t border-neutral-800 flex flex-col sm:flex-row gap-3 justify-end text-sm">
+              <button 
+                onClick={() => saveCookiePreferences(true, true, true)}
+                className="w-full sm:w-auto bg-amber-500 hover:bg-amber-400 text-neutral-950 font-bold px-6 py-2.5 rounded-xl transition cursor-pointer text-center bebas text-base tracking-wider"
+              >
+                ACCETTA TUTTI
+              </button>
+              <button 
+                onClick={() => saveCookiePreferences(true, tempStatistici, tempMarketing)}
+                className="w-full sm:w-auto bg-neutral-800 hover:bg-neutral-700 text-white border border-neutral-700 font-bold px-6 py-2.5 rounded-xl transition cursor-pointer text-center bebas text-base tracking-wider"
+              >
+                SALVA PREFERENZE
+              </button>
+              <button 
+                onClick={() => setShowCookieModal(false)}
+                className="w-full sm:w-auto bg-transparent hover:bg-neutral-900 border border-neutral-800 hover:border-neutral-700 text-neutral-400 hover:text-white font-medium px-6 py-2.5 rounded-xl transition cursor-pointer text-center bebas text-base tracking-wider"
+              >
+                ANNULLA
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
     </div>
   );
