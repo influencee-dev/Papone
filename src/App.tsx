@@ -274,7 +274,7 @@ export default function App() {
       >
         <div className="container">
           <div className="nav-container">
-            <a href="#" onClick={(e) => { e.preventDefault(); setActiveTab("home"); }}>
+            <a href="#" onClick={(e) => { e.preventDefault(); setActiveTab("home"); window.scrollTo({ top: 0, behavior: "smooth" }); setMobileMenuOpen(false); }} style={{ display: "flex", alignItems: "center" }}>
               <img src="/logo.png" alt="Papone Dal 1956" className="nav-logo" />
             </a>
             
@@ -852,7 +852,9 @@ export default function App() {
             
             {/* COLUMN 1 */}
             <div className="footer-col">
-              <img src="/logo.png" alt="Logo Papone" className="footer-logo" />
+              <a href="#" onClick={(e) => { e.preventDefault(); setActiveTab("home"); window.scrollTo({ top: 0, behavior: "smooth" }); }} style={{ display: "inline-block", cursor: "pointer" }}>
+                <img src="/logo.png" alt="Logo Papone" className="footer-logo" />
+              </a>
               <p className="footer-tagline">Magnatill' n'emozion!</p>
               <p style={{ color: "white" }}>
                 Pub e steakhouse a Foggia dal 1956. Un'istituzione del gusto e della convivialità.
