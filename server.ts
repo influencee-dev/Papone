@@ -62,7 +62,7 @@ app.post("/api/booking", (req, res) => {
   const brevoApiKey = process.env.BREVO_API_KEY;
   if (brevoApiKey) {
     console.log("[Brevo] Key rilevata. Invio notifica e sincronizzazione contatto...");
-    const receiverEmail = process.env.BREVO_RECEIVER_EMAIL || "papone2018@gmail.com";
+    const receiverEmail = process.env.BREVO_RECEIVER_EMAIL || "alessandro_doc@live.it";
 
     // 1. Send transactional email to owner
     fetch("https://api.brevo.com/v3/smtp/email", {
