@@ -874,29 +874,292 @@ export default function App() {
                 </div>
               </div>
 
-              {/* CATEGORIA 4: BIRRE ARTIGIANALI */}
+              {/* CATEGORIA 4: LE BIRRE (SPINA & ARTIGIANALI) */}
               <div className="menu-category" id="menu-birre">
-                <h2 className="category-title border-b-2">Birre Artigianali</h2>
+                <h2 className="category-title border-b-2">Le Birre (Spina & Artigianali)</h2>
                 <div className="menu-grid">
                   <div className="menu-item">
                     <div className="item-info">
                       <div className="item-header">
-                        <span className="item-name text-white">Papone IPA (Alla spina)</span>
+                        <span className="item-name text-white">Papone IPA (Artigianale)</span>
                         <span className="item-price">€ 6.00</span>
                       </div>
                       <p className="item-desc text-neutral-400">
-                        La nostra bionda di punta, fresca e luppolata.
+                        La nostra bionda artigianale di punta, fresca, piacevolmente luppolata ed equilibrata.
                       </p>
                     </div>
                   </div>
                   <div className="menu-item">
                     <div className="item-info">
                       <div className="item-header">
-                        <span className="item-name text-white">Ammiraglia Double Malt</span>
+                        <span className="item-name text-white">Ammiraglia Double Malt (Artigianale)</span>
                         <span className="item-price">€ 7.00</span>
                       </div>
                       <p className="item-desc text-neutral-400">
-                        Rossa ambrata, corpo pieno e note di caramello.
+                        Rossa artigianale ambrata, corpo pieno, aroma persistente e note dolci di caramello.
+                      </p>
+                    </div>
+                  </div>
+                  <div className="menu-item">
+                    <div className="item-info">
+                      <div className="item-header">
+                        <span className="item-name text-white">Heineken (Spina)</span>
+                        <span className="item-price">Piccola € 3.00 · Grande € 5.00</span>
+                      </div>
+                      <p className="item-desc text-neutral-400">
+                        Classica lager bionda, gusto fresco con un tocco luppolato. Piccola (3€) / Grande (5€).
+                      </p>
+                    </div>
+                  </div>
+                  <div className="menu-item">
+                    <div className="item-info">
+                      <div className="item-header">
+                        <span className="item-name text-white">Moretti (Spina)</span>
+                        <span className="item-price">Piccola € 4.00 · Grande € 6.00</span>
+                      </div>
+                      <p className="item-desc text-neutral-400">
+                        Lager italiana a bassa fermentazione, gusto rotondo e aroma fragrante. Piccola (4€) / Grande (6€).
+                      </p>
+                    </div>
+                  </div>
+                  <div className="menu-item">
+                    <div className="item-info">
+                      <div className="item-header">
+                        <span className="item-name text-white">Bulldog (Spina)</span>
+                        <span className="item-price">Piccola € 4.00 · Grande € 6.00</span>
+                      </div>
+                      <p className="item-desc text-neutral-400">
+                        Strong ale intensa, aromatica e dal carattere deciso. Piccola (4€) / Grande (6€).
+                      </p>
+                    </div>
+                  </div>
+                  <div className="menu-item">
+                    <div className="item-info">
+                      <div className="item-header">
+                        <span className="item-name text-white">Caraffa Birra 1.5 L</span>
+                        <span className="item-price">€ 14.00</span>
+                      </div>
+                      <p className="item-desc text-neutral-400">
+                        La bionda alla spina servita in caraffa fredda da 1.5 Litri, ideale da condividere.
+                      </p>
+                    </div>
+                  </div>
+                  <div className="menu-item">
+                    <div className="item-info">
+                      <div className="item-header">
+                        <span className="item-name text-white">Caraffa Birra 3 L</span>
+                        <span className="item-price">€ 22.00</span>
+                      </div>
+                      <p className="item-desc text-neutral-400">
+                        La nostra caraffa extra-large da 3 Litri con spillatore incorporato per massimizzare il brindisi con gli amici.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* CATEGORIA 5: I COCKTAIL */}
+              <div className="menu-category" id="menu-cocktails">
+                <h2 className="category-title border-b-2">I Cocktail</h2>
+                <div className="menu-grid">
+                  <div className="menu-item">
+                    <div className="item-info">
+                      <div className="item-header">
+                        <span className="item-name text-white">Cocktail Classico</span>
+                        <span className="item-price">€ 6.00</span>
+                      </div>
+                      <p className="item-desc text-neutral-400">
+                        I grandi classici della miscelazione: Negroni, Gin Tonic, Gin Lemon, Mojito, Caipirinha e Cuba Libre.
+                      </p>
+                    </div>
+                  </div>
+                  <div className="menu-item">
+                    <div className="item-info">
+                      <div className="item-header">
+                        <span className="item-name text-white">Aperol Spritz / Campari Spritz</span>
+                        <span className="item-price">€ 5.00</span>
+                      </div>
+                      <p className="item-desc text-neutral-400">
+                        L'aperitivo per eccellenza: Prosecco DOC, Aperol o Campari, soda ed una fetta d'arancia fresca.
+                      </p>
+                    </div>
+                  </div>
+                  <div className="menu-item">
+                    <div className="item-info">
+                      <div className="item-header">
+                        <span className="item-name text-white">Cocktail Premium</span>
+                        <span className="item-price">€ 8.00</span>
+                      </div>
+                      <p className="item-desc text-neutral-400">
+                        Preparazioni ricercate realizzate con gin, vodka o rum di fascia premium e botaniche selezionate.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* CATEGORIA 6: I VINI & PROSECCO */}
+              <div className="menu-category" id="menu-vini">
+                <h2 className="category-title border-b-2">I Vini & Prosecco</h2>
+                <div className="menu-grid">
+                  <div className="menu-item">
+                    <div className="item-info">
+                      <div className="item-header">
+                        <span className="item-name text-white">Calice di Vino</span>
+                        <span className="item-price">€ 4.00</span>
+                      </div>
+                      <p className="item-desc text-neutral-400">
+                        Una selezione di vini rossi, bianchi o rosati pugliesi serviti al calice.
+                      </p>
+                    </div>
+                  </div>
+                  <div className="menu-item">
+                    <div className="item-info">
+                      <div className="item-header">
+                        <span className="item-name text-white">Vino Rosso Jalissia</span>
+                        <span className="item-price">€ 18.00</span>
+                      </div>
+                      <p className="item-desc text-neutral-400">
+                        Pregiato vino rosso pugliese dal corpo intenso, persistenza decisa e note speziate di frutti rossi.
+                      </p>
+                    </div>
+                  </div>
+                  <div className="menu-item">
+                    <div className="item-info">
+                      <div className="item-header">
+                        <span className="item-name text-white">Vino Rosato Dinò</span>
+                        <span className="item-price">€ 20.00</span>
+                      </div>
+                      <p className="item-desc text-neutral-400">
+                        Elegante vino rosato dal bouquet floreale, note fruttate avvolgenti e freschezza vibrante.
+                      </p>
+                    </div>
+                  </div>
+                  <div className="menu-item">
+                    <div className="item-info">
+                      <div className="item-header">
+                        <span className="item-name text-white">Vino Rosato Mantajo</span>
+                        <span className="item-price">€ 18.00</span>
+                      </div>
+                      <p className="item-desc text-neutral-400">
+                        Rosato della nostra terra equilibrato, con spiccati sentori mediterranei e finale asciutto e pulito.
+                      </p>
+                    </div>
+                  </div>
+                  <div className="menu-item">
+                    <div className="item-info">
+                      <div className="item-header">
+                        <span className="item-name text-white">Vino Rosato Bisciù</span>
+                        <span className="item-price">€ 20.00</span>
+                      </div>
+                      <p className="item-desc text-neutral-400">
+                        Freschissimo vino rosato artigianale dal sapore sapido, vivace e con persistenti fragranze agrumate.
+                      </p>
+                    </div>
+                  </div>
+                  <div className="menu-item">
+                    <div className="item-info">
+                      <div className="item-header">
+                        <span className="item-name text-white">Bicchiere di Prosecco</span>
+                        <span className="item-price">€ 3.00</span>
+                      </div>
+                      <p className="item-desc text-neutral-400">
+                        Un calice fresco di bollicine spumeggianti per brindare.
+                      </p>
+                    </div>
+                  </div>
+                  <div className="menu-item">
+                    <div className="item-info">
+                      <div className="item-header">
+                        <span className="item-name text-white">Bottiglia di Prosecco</span>
+                        <span className="item-price">€ 16.00</span>
+                      </div>
+                      <p className="item-desc text-neutral-400">
+                        Prosecco DOC spumante extra dry, ideale per aperitivi, festeggiamenti o piatti leggeri.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* CATEGORIA 7: LE BEVANDE */}
+              <div className="menu-category" id="menu-bevande">
+                <h2 className="category-title border-b-2">Le Bevande & Analcolici</h2>
+                <div className="menu-grid">
+                  <div className="menu-item">
+                    <div className="item-info">
+                      <div className="item-header">
+                        <span className="item-name text-white">Acqua Naturale (0.5 L)</span>
+                        <span className="item-price">€ 1.00</span>
+                      </div>
+                      <p className="item-desc text-neutral-400">
+                        Fresca acqua oligominerale naturale in bottiglia.
+                      </p>
+                    </div>
+                  </div>
+                  <div className="menu-item">
+                    <div className="item-info">
+                      <div className="item-header">
+                        <span className="item-name text-white">Acqua Frizzante (0.5 L)</span>
+                        <span className="item-price">€ 1.00</span>
+                      </div>
+                      <p className="item-desc text-neutral-400">
+                        Acqua frizzante e dissetante in bottiglia.
+                      </p>
+                    </div>
+                  </div>
+                  <div className="menu-item">
+                    <div className="item-info">
+                      <div className="item-header">
+                        <span className="item-name text-white">Coca Cola (0.3 L)</span>
+                        <span className="item-price">€ 3.00</span>
+                      </div>
+                      <p className="item-desc text-neutral-400">
+                        La bibita analcolica più famosa al mondo in lattina da 33cl.
+                      </p>
+                    </div>
+                  </div>
+                  <div className="menu-item">
+                    <div className="item-info">
+                      <div className="item-header">
+                        <span className="item-name text-white">Coca Cola Zero (0.3 L)</span>
+                        <span className="item-price">€ 3.00</span>
+                      </div>
+                      <p className="item-desc text-neutral-400">
+                        Tutto il gusto classico di Coca-Cola senza calorie e senza zuccheri in lattina da 33cl.
+                      </p>
+                    </div>
+                  </div>
+                  <div className="menu-item">
+                    <div className="item-info">
+                      <div className="item-header">
+                        <span className="item-name text-white">Estathè alla Pesca (0.3 L)</span>
+                        <span className="item-price">€ 3.00</span>
+                      </div>
+                      <p className="item-desc text-neutral-400">
+                        Il vero infuso di foglie di tè al sapore estivo della pesca.
+                      </p>
+                    </div>
+                  </div>
+                  <div className="menu-item">
+                    <div className="item-info">
+                      <div className="item-header">
+                        <span className="item-name text-white">Estathè al Limone (0.3 L)</span>
+                        <span className="item-price">€ 3.00</span>
+                      </div>
+                      <p className="item-desc text-neutral-400">
+                        Fresco tè freddo infuso dal gusto agrumato del limone.
+                      </p>
+                    </div>
+                  </div>
+                  <div className="menu-item">
+                    <div className="item-info">
+                      <div className="item-header">
+                        <span className="item-name text-white">Fanta (0.3 L)</span>
+                        <span className="item-price">€ 3.00</span>
+                      </div>
+                      <p className="item-desc text-neutral-400">
+                        Bibita analcolica frizzante con vero succo d'arancia italiana.
                       </p>
                     </div>
                   </div>
