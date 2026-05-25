@@ -836,7 +836,7 @@ export default function App() {
 
               {/* CATEGORIA 3: I NOSTRI BURGER */}
               <div className="menu-category" id="menu-burger">
-                <h2 className="category-title border-b-2">I Nostri Burger</h2>
+                <h2 className="category-title border-b-2">I Nostri Burger & Panini</h2>
                 <div className="menu-grid">
                   <div className="menu-item">
                     <div className="item-info">
@@ -868,6 +868,94 @@ export default function App() {
                       </div>
                       <p className="item-desc text-neutral-400">
                         Burger di ceci e barbabietola, zucchine grigliate e crema di avocado.
+                      </p>
+                    </div>
+                  </div>
+                  <div className="menu-item">
+                    <div className="item-info">
+                      <div className="item-header">
+                        <span className="item-name text-white">Cowboy</span>
+                        <span className="item-price">€ 9.00</span>
+                      </div>
+                      <p className="item-desc text-neutral-400">
+                        Paccanelli, mozzarella, insalata, carciofi, tabasco e salsa rosa.
+                      </p>
+                    </div>
+                  </div>
+                  <div className="menu-item">
+                    <div className="item-info">
+                      <div className="item-header">
+                        <span className="item-name text-white">Bandito</span>
+                        <span className="item-price">€ 9.00</span>
+                      </div>
+                      <p className="item-desc text-neutral-400">
+                        Hamburger di vitello, funghi, insalata, bacon, patatine fritte, salsa cheddar e salsa remoulade.
+                      </p>
+                    </div>
+                  </div>
+                  <div className="menu-item">
+                    <div className="item-info">
+                      <div className="item-header">
+                        <span className="item-name text-white">Sceriffo</span>
+                        <span className="item-price">€ 9.00</span>
+                      </div>
+                      <p className="item-desc text-neutral-400">
+                        Salsiccia, patate al forno, mozzarella, melanzane sott'olio, maionese e salsa BBQ.
+                      </p>
+                    </div>
+                  </div>
+                  <div className="menu-item">
+                    <div className="item-info">
+                      <div className="item-header">
+                        <span className="item-name text-white">Fuorilegge</span>
+                        <span className="item-price">€ 9.00</span>
+                      </div>
+                      <p className="item-desc text-neutral-400">
+                        Parmigiana, ventricina e caciocavallo fuso.
+                      </p>
+                    </div>
+                  </div>
+                  <div className="menu-item">
+                    <div className="item-info">
+                      <div className="item-header">
+                        <span className="item-name text-white">Pistolero</span>
+                        <span className="item-price">€ 9.00</span>
+                      </div>
+                      <p className="item-desc text-neutral-400">
+                        Cotoletta, insalata e maionese.
+                      </p>
+                    </div>
+                  </div>
+                  <div className="menu-item">
+                    <div className="item-info">
+                      <div className="item-header">
+                        <span className="item-name text-white">Stallone</span>
+                        <span className="item-price">€ 13.00</span>
+                      </div>
+                      <p className="item-desc text-neutral-400">
+                        Doppio hamburger di vitello, cheddar, bacon, rucola, salsa onion e salsa yogurt.
+                      </p>
+                    </div>
+                  </div>
+                  <div className="menu-item">
+                    <div className="item-info">
+                      <div className="item-header">
+                        <span className="item-name text-white">Cavallo Pazzo</span>
+                        <span className="item-price">€ 13.00</span>
+                      </div>
+                      <p className="item-desc text-neutral-400">
+                        Pulled pork, scaglie di grana, insalata/misticanza, salsa BBQ e salsa onion.
+                      </p>
+                    </div>
+                  </div>
+                  <div className="menu-item">
+                    <div className="item-info">
+                      <div className="item-header">
+                        <span className="item-name text-white">Gringo</span>
+                        <span className="item-price">€ 13.00</span>
+                      </div>
+                      <p className="item-desc text-neutral-400">
+                        Big hamburger scottona 250g, uovo, melanzane grigliate, pomodori secchi, salsa cheddar e BBQ.
                       </p>
                     </div>
                   </div>
