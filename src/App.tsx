@@ -476,7 +476,7 @@ export default function App() {
                 {/* Card 3 */}
                 <div className="menu-card" onClick={() => scrollToMenuSection("menu-antipasti")} style={{ backgroundImage: "url('/antipasti&grill.png')" }}>
                   <div className="menu-card-overlay"></div>
-                  <h3>ANTIPASTI & GRILL</h3>
+                  <h3>ANTIPASTI & FRITTI</h3>
                   <p style={{ color: "var(--color-text)" }}>
                     Taglieri di salumi e formaggi locali, bruschette, fritti e assaggi per iniziare al meglio.
                   </p>
@@ -765,32 +765,171 @@ export default function App() {
           <section className="menu-section">
             <div className="container">
               
-              {/* CATEGORIA 1: ANTIPASTI */}
+              {/* CATEGORIA 1: ANTIPASTI & FRITTI */}
               <div className="menu-category" id="menu-antipasti">
-                <h2 className="category-title border-b-2">Gli Antipasti</h2>
+                <h2 className="category-title border-b-2">Antipasti & Fritti</h2>
                 <div className="menu-grid">
                   <div className="menu-item">
                     <div className="item-info">
                       <div className="item-header">
-                        <span className="item-name text-white">Tagliere Papone</span>
-                        <span className="item-price">€ 18.00</span>
+                        <span className="item-name text-white">Fiori di zucca (5 pezzi)</span>
+                        <span className="item-price">€ 5.00</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="menu-item">
+                    <div className="item-info">
+                      <div className="item-header">
+                        <span className="item-name text-white">Hot dog fritto (3 pezzi)</span>
+                        <span className="item-price">€ 4.50</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="menu-item">
+                    <div className="item-info">
+                      <div className="item-header">
+                        <span className="item-name text-white">Triangolo speck e patate (5 pezzi)</span>
+                        <span className="item-price">€ 5.00</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="menu-item">
+                    <div className="item-info">
+                      <div className="item-header">
+                        <span className="item-name text-white">Nuggets di pulled pork (5 pezzi)</span>
+                        <span className="item-price">€ 6.00</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="menu-item">
+                    <div className="item-info">
+                      <div className="item-header">
+                        <span className="item-name text-white">Nuggets di pollo (6 pezzi)</span>
+                        <span className="item-price">€ 4.00</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="menu-item">
+                    <div className="item-info">
+                      <div className="item-header">
+                        <span className="item-name text-white">Stick di mozzarella (5 pezzi)</span>
+                        <span className="item-price">€ 5.00</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="menu-item">
+                    <div className="item-info">
+                      <div className="item-header">
+                        <span className="item-name text-white">Olive ascolane (6 pezzi)</span>
+                        <span className="item-price">€ 3.00</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="menu-item">
+                    <div className="item-info">
+                      <div className="item-header">
+                        <span className="item-name text-white">Patatine fritte</span>
+                        <span className="item-price">€ 3.00</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="menu-item">
+                    <div className="item-info">
+                      <div className="item-header">
+                        <span className="item-name text-white">Patate dolci americane</span>
+                        <span className="item-price">€ 4.00</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="menu-item">
+                    <div className="item-info">
+                      <div className="item-header">
+                        <span className="item-name text-white">Patate cheddar e bacon</span>
+                        <span className="item-price">€ 4.90</span>
                       </div>
                       <p className="item-desc text-neutral-400">
-                        Salumi locali, formaggi artigianali, sott'oli fatti in casa e bruschette.
+                        * € 5.90 con doppio cheddar e bacon croccante
                       </p>
                     </div>
                   </div>
                   <div className="menu-item">
                     <div className="item-info">
                       <div className="item-header">
-                        <span className="item-name text-white">Gran Fritto Misto</span>
-                        <span className="item-price">€ 12.00</span>
+                        <span className="item-name text-white">Parmigiana</span>
+                        <span className="item-price">€ 5.00</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="menu-item">
+                    <div className="item-info">
+                      <div className="item-header">
+                        <span className="item-name text-white">Mix di affettati</span>
+                        <span className="item-price">€ 6.00</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="menu-item">
+                    <div className="item-info">
+                      <div className="item-header">
+                        <span className="item-name text-white">Formaggi mix</span>
+                        <span className="item-price">€ 6.00</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="menu-item">
+                    <div className="item-info">
+                      <div className="item-header">
+                        <span className="item-name text-white">Contorni (piatto small)</span>
+                        <span className="item-price">€ 4.00</span>
                       </div>
                       <p className="item-desc text-neutral-400">
-                        Arancini, crocchette, mozzarelle in carrozza e verdure in pastella.
+                        4 scelte dal banco (i prodotti variano in base alla stagionalità)
                       </p>
                     </div>
                   </div>
+                  <div className="menu-item">
+                    <div className="item-info">
+                      <div className="item-header">
+                        <span className="item-name text-white">Bruschetta</span>
+                        <span className="item-price">€ 5.00</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="menu-item">
+                    <div className="item-info">
+                      <div className="item-header">
+                        <span className="item-name text-white">Caprese</span>
+                        <span className="item-price">€ 7.00</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="menu-item">
+                    <div className="item-info">
+                      <div className="item-header">
+                        <span className="item-name text-white">Gateau di patate</span>
+                        <span className="item-price">€ 5.00</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="menu-item">
+                    <div className="item-info">
+                      <div className="item-header">
+                        <span className="item-name text-white">Nodini di latte vaccino</span>
+                        <span className="item-price">€ 0.80 / pezzo</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="menu-item">
+                    <div className="item-info">
+                      <div className="item-header">
+                        <span className="item-name text-white">Frittata</span>
+                        <span className="item-price">€ 4.00</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="text-right text-xs text-neutral-400 mt-4 italic">
+                  * Aggiunte da €0.50 a €1.50
                 </div>
               </div>
 
@@ -801,34 +940,114 @@ export default function App() {
                   <div className="menu-item">
                     <div className="item-info">
                       <div className="item-header">
-                        <span className="item-name text-white">Fiorentina di Scottona</span>
-                        <span className="item-price">€ 4.50/hg</span>
+                        <span className="item-name text-white">Hamburger di vitello</span>
+                        <span className="item-price">€ 6.00</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="menu-item">
+                    <div className="item-info">
+                      <div className="item-header">
+                        <span className="item-name text-white">Hamburger di pollo</span>
+                        <span className="item-price">€ 6.00</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="menu-item">
+                    <div className="item-info">
+                      <div className="item-header">
+                        <span className="item-name text-white">Hamburger Scottona</span>
+                        <span className="item-price">€ 8.00</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="menu-item">
+                    <div className="item-info">
+                      <div className="item-header">
+                        <span className="item-name text-white">Mortadella alla brace</span>
+                        <span className="item-price">€ 4.00</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="menu-item">
+                    <div className="item-info">
+                      <div className="item-header">
+                        <span className="item-name text-white">Arrosticini</span>
+                        <span className="item-price">€ 1.50 / pezzo</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="menu-item">
+                    <div className="item-info">
+                      <div className="item-header">
+                        <span className="item-name text-white">Tagliata di Scottona (250g)</span>
+                        <span className="item-price">€ 18.00</span>
                       </div>
                       <p className="item-desc text-neutral-400">
-                        Frollatura minima 30 giorni, cotta su griglia a legna.
+                        Rucola, pomodorini e grana
                       </p>
                     </div>
                   </div>
                   <div className="menu-item">
                     <div className="item-info">
                       <div className="item-header">
-                        <span className="item-name text-white">Tagliata al Rosmarino</span>
-                        <span className="item-price">€ 22.00</span>
+                        <span className="item-name text-white">Salsiccia (3 capi)</span>
+                        <span className="item-price">€ 6.00</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="menu-item">
+                    <div className="item-info">
+                      <div className="item-header">
+                        <span className="item-name text-white">Wurstel di pollo</span>
+                        <span className="item-price">€ 4.00</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="menu-item">
+                    <div className="item-info">
+                      <div className="item-header">
+                        <span className="item-name text-white">Torcinelli (5 pezzi)</span>
+                        <span className="item-price">€ 6.50</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="menu-item">
+                    <div className="item-info">
+                      <div className="item-header">
+                        <span className="item-name text-white">Paccanelli (5 pezzi)</span>
+                        <span className="item-price">€ 6.50</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="menu-item">
+                    <div className="item-info">
+                      <div className="item-header">
+                        <span className="item-name text-white">Arrosto mix per 2 persone + 2 birre 0.4L</span>
+                        <span className="item-price">€ 30.00</span>
                       </div>
                       <p className="item-desc text-neutral-400">
-                        Controfiletto di manzo con sale grigio e rosmarino fresco.
+                        4 salsicce, 2 hamburger, 1 paccanello, 4 torcinelli + patatine fritte
                       </p>
                     </div>
                   </div>
                   <div className="menu-item">
                     <div className="item-info">
                       <div className="item-header">
-                        <span className="item-name text-white">Ribs BBQ</span>
-                        <span className="item-price">€ 16.50</span>
+                        <span className="item-name text-white">Arrosto mix per 4 persone + 1.5L birra</span>
+                        <span className="item-price">€ 60.00</span>
                       </div>
                       <p className="item-desc text-neutral-400">
-                        Costine di maiale marinate e glassate con salsa barbeque artigianale.
+                        8 salsicce, 4 hamburger, 2 paccanelli, 6 torcinelli + patatine fritte
                       </p>
+                    </div>
+                  </div>
+                  <div className="menu-item">
+                    <div className="item-info">
+                      <div className="item-header">
+                        <span className="item-name text-white">Caprese</span>
+                        <span className="item-price">€ 7.00</span>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -838,39 +1057,6 @@ export default function App() {
               <div className="menu-category" id="menu-burger">
                 <h2 className="category-title border-b-2">I Nostri Burger & Panini</h2>
                 <div className="menu-grid">
-                  <div className="menu-item">
-                    <div className="item-info">
-                      <div className="item-header">
-                        <span className="item-name text-white">Il Classico 1956</span>
-                        <span className="item-price">€ 11.00</span>
-                      </div>
-                      <p className="item-desc text-neutral-400">
-                        Manzo 200g, cheddar, lattuga, pomodoro e salsa segreta Papone.
-                      </p>
-                    </div>
-                  </div>
-                  <div className="menu-item">
-                    <div className="item-info">
-                      <div className="item-header">
-                        <span className="item-name text-white">Wild West</span>
-                        <span className="item-price">€ 13.50</span>
-                      </div>
-                      <p className="item-desc text-neutral-400">
-                        Manzo, bacon croccante, anelli di cipolla e salsa smoky BBQ.
-                      </p>
-                    </div>
-                  </div>
-                  <div className="menu-item">
-                    <div className="item-info">
-                      <div className="item-header">
-                        <span className="item-name text-white">Veggie Soul</span>
-                        <span className="item-price">€ 10.50</span>
-                      </div>
-                      <p className="item-desc text-neutral-400">
-                        Burger di ceci e barbabietola, zucchine grigliate e crema di avocado.
-                      </p>
-                    </div>
-                  </div>
                   <div className="menu-item">
                     <div className="item-info">
                       <div className="item-header">
@@ -959,35 +1145,75 @@ export default function App() {
                       </p>
                     </div>
                   </div>
+                  <div className="menu-item">
+                    <div className="item-info">
+                      <div className="item-header">
+                        <span className="item-name text-[var(--color-accent)] font-bold">Fattill' Tu (Componi il tuo panino)</span>
+                        <span className="item-price">€ 10.00</span>
+                      </div>
+                      <p className="item-desc text-neutral-400 font-medium">
+                        Carne: salsiccia o hamburger vitello/pollo, 2 salse, 3 contorni a scelta.
+                      </p>
+                    </div>
+                  </div>
                 </div>
               </div>
 
-              {/* CATEGORIA 4: LE BIRRE (SPINA & ARTIGIANALI) */}
-              <div className="menu-category" id="menu-birre">
-                <h2 className="category-title border-b-2">Le Birre (Spina & Artigianali)</h2>
+              {/* LE NOSTRE COMBO */}
+              <div className="menu-category" id="menu-combo">
+                <h2 className="category-title border-b-2">Le Nostre Combo</h2>
                 <div className="menu-grid">
                   <div className="menu-item">
                     <div className="item-info">
                       <div className="item-header">
-                        <span className="item-name text-white">Papone IPA (Artigianale)</span>
-                        <span className="item-price">€ 6.00</span>
+                        <span className="item-name text-white">Menù Il Buono & Il Cattivo (Adulti)</span>
+                        <span className="item-price">€ 12.99</span>
                       </div>
                       <p className="item-desc text-neutral-400">
-                        La nostra bionda artigianale di punta, fresca, piacevolmente luppolata ed equilibrata.
+                        Panino + patatine fritte + bibita / birra 0.20 / calice di vino.
                       </p>
                     </div>
                   </div>
                   <div className="menu-item">
                     <div className="item-info">
                       <div className="item-header">
-                        <span className="item-name text-white">Ammiraglia Double Malt (Artigianale)</span>
-                        <span className="item-price">€ 7.00</span>
+                        <span className="item-name text-white">Menù Pony (Bambini)</span>
+                        <span className="item-price">€ 9.99</span>
                       </div>
                       <p className="item-desc text-neutral-400">
-                        Rossa artigianale ambrata, corpo pieno, aroma persistente e note dolci di caramello.
+                        Panino (con hamburger o cotoletta) + patatine fritte + bibita.
                       </p>
                     </div>
                   </div>
+                  <div className="menu-item">
+                    <div className="item-info">
+                      <div className="item-header">
+                        <span className="item-name text-white">Combo Texano</span>
+                        <span className="item-price">€ 32.99</span>
+                      </div>
+                      <p className="item-desc text-neutral-400">
+                        2 Menù Adulti + 1 Menù bambini.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* CATEGORIA 4: LE BIRRE (SPINA & ARTIGIANALI) */}
+               <div className="menu-category" id="menu-birre">
+                 <h2 className="category-title border-b-2">Le Birre (Spina & Artigianali)</h2>
+                 <div className="menu-grid">
+                   <div className="menu-item">
+                     <div className="item-info">
+                       <div className="item-header">
+                         <span className="item-name text-white">Ammiraglia Double Malt (Artigianale)</span>
+                         <span className="item-price">€ 7.00</span>
+                       </div>
+                       <p className="item-desc text-neutral-400">
+                         Rossa artigianale ambrata, corpo pieno, aroma persistente e note dolci di caramello.
+                       </p>
+                     </div>
+                   </div>
                   <div className="menu-item">
                     <div className="item-info">
                       <div className="item-header">
@@ -1035,11 +1261,33 @@ export default function App() {
                   <div className="menu-item">
                     <div className="item-info">
                       <div className="item-header">
-                        <span className="item-name text-white">Caraffa Birra 3 L</span>
-                        <span className="item-price">€ 22.00</span>
+                        <span className="item-name text-white">Caraffa Birra 3 L (Bionda)</span>
+                        <span className="item-price">€ 24.00</span>
                       </div>
                       <p className="item-desc text-neutral-400">
                         La nostra caraffa extra-large da 3 Litri con spillatore incorporato per massimizzare il brindisi con gli amici.
+                      </p>
+                    </div>
+                  </div>
+                  <div className="menu-item">
+                    <div className="item-info">
+                      <div className="item-header">
+                        <span className="item-name text-white">Caraffa Birra 3 L Moretti Rossa</span>
+                        <span className="item-price">€ 28.00</span>
+                      </div>
+                      <p className="item-desc text-neutral-400">
+                        Moretti Rossa in caraffa da 3 Litri con spillatore incorporato per i tavoli.
+                      </p>
+                    </div>
+                  </div>
+                  <div className="menu-item">
+                    <div className="item-info">
+                      <div className="item-header">
+                        <span className="item-name text-white">Caraffa Birra 3 L Bulldog</span>
+                        <span className="item-price">€ 28.00</span>
+                      </div>
+                      <p className="item-desc text-neutral-400">
+                        Bulldog Strong Ale in caraffa da 3 Litri con spillatore incorporato per i tavoli.
                       </p>
                     </div>
                   </div>
@@ -1109,6 +1357,28 @@ export default function App() {
                       </div>
                       <p className="item-desc text-neutral-400">
                         Pregiato vino rosso pugliese dal corpo intenso, persistenza decisa e note speziate di frutti rossi.
+                      </p>
+                    </div>
+                  </div>
+                  <div className="menu-item">
+                    <div className="item-info">
+                      <div className="item-header">
+                        <span className="item-name text-white">Vino Rosso Sanella</span>
+                        <span className="item-price">€ 18.00</span>
+                      </div>
+                      <p className="item-desc text-neutral-400">
+                        Sanella rosso dal sapore rotondo, avvolgente ed equilibrato.
+                      </p>
+                    </div>
+                  </div>
+                  <div className="menu-item">
+                    <div className="item-info">
+                      <div className="item-header">
+                        <span className="item-name text-white">Vino Rosato Sanella</span>
+                        <span className="item-price">€ 18.00</span>
+                      </div>
+                      <p className="item-desc text-neutral-400">
+                        Sanella rosato fresco, leggermente fruttato ed elegante.
                       </p>
                     </div>
                   </div>

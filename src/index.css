@@ -474,17 +474,6 @@ header .hamburger:hover {
   text-align: center;
 }
 
-@media (max-width: 768px) {
-  .hero-btns {
-    flex-direction: column;
-    align-items: center;
-  }
-  .hero-btns .btn {
-    width: 250px;
-    min-width: unset;
-  }
-}
-
 .scroll-down {
   position: absolute;
   bottom: 30px;
@@ -496,6 +485,22 @@ header .hamburger:hover {
   font-size: 1.8rem;
   animation: bounceArrow 2s infinite;
   transition: var(--transition-smooth);
+}
+
+@media (max-width: 768px) {
+  .hero-btns {
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+  .hero-btns .btn {
+    width: 250px;
+    min-width: unset;
+  }
+  .scroll-down {
+    bottom: 12px;
+    font-size: 1.5rem;
+  }
 }
 
 .scroll-down:hover {
