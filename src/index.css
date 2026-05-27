@@ -264,6 +264,28 @@ header .hamburger:hover {
   .nav-cta {
     display: none !important;
   }
+  header .container {
+    height: 100% !important;
+    display: flex !important;
+    align-items: center !important;
+  }
+  .nav-container {
+    position: relative !important;
+    justify-content: center !important;
+    align-items: center !important;
+    height: 100% !important;
+    display: flex !important;
+  }
+  .nav-logo {
+    height: 65px !important;
+  }
+  header .hamburger {
+    position: absolute !important;
+    right: 24px !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    margin: 0 !important;
+  }
 }
 
 .nav-link {
