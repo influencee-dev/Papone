@@ -177,8 +177,12 @@ header .container {
 }
 
 .nav-logo {
-  height: 50px;
-  width: auto;
+  height: 65px !important;
+  width: auto !important;
+  max-height: 65px !important;
+  display: block !important;
+  object-fit: contain !important;
+  flex-shrink: 0 !important;
   transition: var(--transition-smooth);
 }
 

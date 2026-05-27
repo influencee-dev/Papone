@@ -13,72 +13,6 @@ interface Booking {
   createdAt: string;
 }
 
-export function Logo() {
-  return (
-    <div style={{ display: "flex", alignItems: "center", gap: "12px", height: "100%", justifyContent: "center" }}>
-      {/* Icon: Steakhouse / Pub Emblem (Golden circle with styled grill-fork & flame) */}
-      <div 
-        style={{ 
-          width: "44px", 
-          height: "44px", 
-          backgroundColor: "#E1A94F", 
-          color: "#111111", 
-          display: "flex", 
-          alignItems: "center", 
-          justifyContent: "center",
-          borderRadius: "50%",
-          boxShadow: "0 4px 12px rgba(0,0,0,0.25)",
-          flexShrink: 0
-        }}
-      >
-        <svg 
-          viewBox="0 0 24 24" 
-          width="24" 
-          height="24" 
-          fill="none" 
-          stroke="currentColor" 
-          strokeWidth="2.5" 
-          strokeLinecap="round" 
-          strokeLinejoin="round"
-        >
-          <path d="M12 2c0 0-3.5 3.5-3.5 7.5S10 13 12 13s3.5-2 3.5-3.5S12 2 12 2z" />
-          <path d="M12 13v7" />
-          <path d="M9 17h6" />
-        </svg>
-      </div>
-      
-      {/* Text Brand */}
-      <div style={{ display: "flex", flexDirection: "column", textAlign: "left", lineHeight: 1.05 }}>
-        <span 
-          style={{ 
-            fontFamily: "'Bebas Neue', sans-serif", 
-            fontSize: "2rem", 
-            fontWeight: "bold", 
-            color: "#FFFFFF", 
-            letterSpacing: "1.5px",
-            textTransform: "uppercase"
-          }}
-        >
-          PAPONE
-        </span>
-        <span 
-          style={{ 
-            fontFamily: "'Playfair Display', serif", 
-            fontSize: "0.85rem", 
-            color: "#E1A94F", 
-            fontWeight: "bold",
-            fontStyle: "italic",
-            letterSpacing: "1px",
-            marginTop: "-1px"
-          }}
-        >
-          Dal 1956
-        </span>
-      </div>
-    </div>
-  );
-}
-
 export default function App() {
   const [activeTab, setActiveTab] = useState<"home" | "menu" | "privacy" | "cookie">("home");
   const [showAdmin, setShowAdmin] = useState(false);
@@ -415,8 +349,8 @@ export default function App() {
       >
         <div className="container">
           <div className="nav-container">
-            <a href="#" onClick={(e) => { e.preventDefault(); setActiveTab("home"); window.scrollTo({ top: 0, behavior: "smooth" }); setMobileMenuOpen(false); }} style={{ display: "flex", alignItems: "center", height: "100%" }}>
-              <Logo />
+            <a href="#" onClick={(e) => { e.preventDefault(); setActiveTab("home"); window.scrollTo({ top: 0, behavior: "smooth" }); setMobileMenuOpen(false); }} style={{ display: "flex", alignItems: "center" }}>
+              <img src="/logo.png" alt="Papone Dal 1956" className="nav-logo" referrerPolicy="no-referrer" />
             </a>
             
             <nav className="nav-menu hidden md:flex">
@@ -1809,7 +1743,7 @@ export default function App() {
             <div className="footer-col">
               <div style={{ display: "flex", alignItems: "center", gap: "15px", marginBottom: "20px" }}>
                 <a href="#" onClick={(e) => { e.preventDefault(); setActiveTab("home"); window.scrollTo({ top: 0, behavior: "smooth" }); }} style={{ display: "inline-block", cursor: "pointer" }}>
-                  <Logo />
+                  <img src="/logo.png" alt="Logo Papone" className="footer-logo" style={{ marginBottom: 0 }} referrerPolicy="no-referrer" />
                 </a>
                 <p className="footer-tagline" style={{ marginBottom: 0 }}>Magnatill' n'emozion!</p>
               </div>
