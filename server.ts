@@ -30,9 +30,14 @@ function saveBookings(bookings: any[]) {
     console.error("Errore scrittura database prenotazioni:", err);
   }
 }
-
+function normalizePhone(tel: string): string {
+  const digits = tel.replace(/\D/g, "");
+  if (digits.startsWith("39") && digits.length >= 11) return `+${digits}`;
+  if (digits.startsWith("0039")) return `+${digits.slice(2)}`;
+  return `+39${digits}`;
+}
 // 1. POST /api/booking - Create a booking
-app.post("/api/booking", (req, res) => {
+app.post("/api/booking", async (req, res) => { 
   const { nome, cognome, email, tel, data, persone, note } = req.body;
   
   if (!nome || !cognome || !tel || !data || !persone) {
@@ -60,63 +65,67 @@ app.post("/api/booking", (req, res) => {
 
   // Brevo API Integration if BREVO_API_KEY is supplied
   const brevoApiKey = process.env.BREVO_API_KEY;
-  if (brevoApiKey) {
-    console.log("[Brevo] Key rilevata. Invio notifica e sincronizzazione contatto...");
-    const receiverEmail = process.env.BREVO_RECEIVER_EMAIL || "alessandro_doc@live.it";
-
-    // 1. Send transactional email to owner
-    fetch("https://api.brevo.com/v3/smtp/email", {
-      method: "POST",
-      headers: {
-        "accept": "application/json",
-        "content-type": "application/json",
-        "api-key": brevoApiKey
-      },
-      body: JSON.stringify({
-        sender: { name: "Sito Web Papone", email: "prenotazioni@papone.it" },
-        to: [{ email: receiverEmail, name: "Papone dal 1956" }],
-        subject: `Nuova Prenotazione: ${nome} ${cognome} (${persone} persone)`,
-        htmlContent: `
-          <html>
-            <body style="font-family: Arial, sans-serif; background-color: #111111; color: #ffffff; padding: 20px;">
-              <div style="max-width: 600px; margin: 0 auto; background-color: #1a1a1a; padding: 30px; border-radius: 10px; border: 1px solid #d4a84b;">
-                <h2 style="color: #d4a84b; border-bottom: 2px solid #d4a84b; padding-bottom: 15px; font-weight: bold;">Nuova Richiesta di Prenotazione</h2>
-                <p style="font-size: 16px; margin-top: 20px;">Hai ricevuto una nuova richiesta dal sito web:</p>
-                <table style="width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 15px;">
-                  <tr>
-                    <td style="padding: 10px; border-bottom: 1px solid #333333; font-weight: bold; color: #d4a84b; width: 150px;">Cliente:</td>
-                    <td style="padding: 10px; border-bottom: 1px solid #333333; color: #ffffff;">${nome} ${cognome}</td>
-                  </tr>
-                  <tr>
-                    <td style="padding: 10px; border-bottom: 1px solid #333333; font-weight: bold; color: #d4a84b;">Data Richiesta:</td>
-                    <td style="padding: 10px; border-bottom: 1px solid #333333; color: #ffffff;">${data}</td>
-                  </tr>
-                  <tr>
-                    <td style="padding: 10px; border-bottom: 1px solid #333333; font-weight: bold; color: #d4a84b;">N° Coperti:</td>
-                    <td style="padding: 10px; border-bottom: 1px solid #333333; color: #ffffff;">${persone} persone</td>
-                  </tr>
-                  <tr>
-                    <td style="padding: 10px; border-bottom: 1px solid #333333; font-weight: bold; color: #d4a84b;">Telefono:</td>
-                    <td style="padding: 10px; border-bottom: 1px solid #333333;"><a href="tel:${tel}" style="color: #25d366; text-decoration: none; font-weight: bold;">${tel}</a></td>
-                  </tr>
-                  <tr>
-                    <td style="padding: 10px; border-bottom: 1px solid #333333; font-weight: bold; color: #d4a84b;">Email:</td>
-                    <td style="padding: 10px; border-bottom: 1px solid #333333; color: #ffffff;">${email || "Non inserita"}</td>
-                  </tr>
-                </table>
-                ${note ? `
-                <div style="margin-top: 20px; background-color: #222222; padding: 15px; border-radius: 5px; border-left: 4px solid #d4a84b; font-style: italic; color: #cccccc;">
-                  <strong>Note Speciali:</strong><br/>
-                  "${note}"
-                </div>` : ""}
-                <div style="margin-top: 35px; text-align: center;">
-                  <a href="https://wa.me/${tel.replace(/\D/g, '')}" style="background-color: #25d366; color: white; padding: 12px 24px; border-radius: 5px; text-decoration: none; font-weight: bold; display: inline-block;">
-                    Contatta Cliente su WhatsApp
-                  </a>
+  try {
+      const emailResp = await fetch("https://api.brevo.com/v3/smtp/email", {
+        method: "POST",
+        headers: {
+          "accept": "application/json",
+          "content-type": "application/json",
+          "api-key": brevoApiKey
+        },
+        body: JSON.stringify({
+          sender: { name: "Sito Web Papone", email: receiverEmail },
+          to: [{ email: receiverEmail, name: "Papone dal 1956" }],
+          subject: `Nuova Prenotazione: ${nome} ${cognome} (${persone} persone)`,
+          htmlContent: `
+            <html>
+              <body style="font-family: Arial, sans-serif; background-color: #111111; color: #ffffff; padding: 20px;">
+                <div style="max-width: 600px; margin: 0 auto; background-color: #1a1a1a; padding: 30px; border-radius: 10px; border: 1px solid #d4a84b;">
+                  <h2 style="color: #d4a84b; border-bottom: 2px solid #d4a84b; padding-bottom: 15px; font-weight: bold;">Nuova Richiesta di Prenotazione</h2>
+                  <p style="font-size: 16px; margin-top: 20px;">Hai ricevuto una nuova richiesta dal sito web:</p>
+                  <table style="width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 15px;">
+                    <tr>
+                      <td style="padding: 10px; border-bottom: 1px solid #333333; font-weight: bold; color: #d4a84b; width: 150px;">Cliente:</td>
+                      <td style="padding: 10px; border-bottom: 1px solid #333333; color: #ffffff;">${nome} ${cognome}</td>
+                    </tr>
+                    <tr>
+                      <td style="padding: 10px; border-bottom: 1px solid #333333; font-weight: bold; color: #d4a84b;">Data Richiesta:</td>
+                      <td style="padding: 10px; border-bottom: 1px solid #333333; color: #ffffff;">${data}</td>
+                    </tr>
+                    <tr>
+                      <td style="padding: 10px; border-bottom: 1px solid #333333; font-weight: bold; color: #d4a84b;">N° Coperti:</td>
+                      <td style="padding: 10px; border-bottom: 1px solid #333333; color: #ffffff;">${persone} persone</td>
+                    </tr>
+                    <tr>
+                      <td style="padding: 10px; border-bottom: 1px solid #333333; font-weight: bold; color: #d4a84b;">Telefono:</td>
+                      <td style="padding: 10px; border-bottom: 1px solid #333333;"><a href="tel:${tel}" style="color: #25d366; text-decoration: none; font-weight: bold;">${tel}</a></td>
+                    </tr>
+                    <tr>
+                      <td style="padding: 10px; border-bottom: 1px solid #333333; font-weight: bold; color: #d4a84b;">Email:</td>
+                      <td style="padding: 10px; border-bottom: 1px solid #333333; color: #ffffff;">${email || "Non inserita"}</td>
+                    </tr>
+                  </table>
+                  ${note ? `
+                  <div style="margin-top: 20px; background-color: #222222; padding: 15px; border-radius: 5px; border-left: 4px solid #d4a84b; font-style: italic; color: #cccccc;">
+                    <strong>Note Speciali:</strong><br/>
+                    "${note}"
+                  </div>` : ""}
+                  <div style="margin-top: 35px; text-align: center;">
+                    <a href="https://wa.me/${tel.replace(/\D/g, '')}" style="background-color: #25d366; color: white; padding: 12px 24px; border-radius: 5px; text-decoration: none; font-weight: bold; display: inline-block;">
+                      Contatta Cliente su WhatsApp
+                    </a>
+                  </div>
                 </div>
-              </div>
-            </body>
-          </html>
+              </body>
+            </html>
+          `
+        })
+      });
+      const emailData = await emailResp.json();
+      console.log("[Brevo SMTP] Risposta:", JSON.stringify(emailData));
+    } catch (err) {
+      console.error("[Brevo SMTP] Errore invio email:", err);
+    }
         `
       })
     })
@@ -126,27 +135,52 @@ app.post("/api/booking", (req, res) => {
 
     // 2. Add/Update customer as Contact in CRM List
     if (email) {
-      fetch("https://api.brevo.com/v3/contacts", {
-        method: "POST",
+  try {
+    const contactResp = await fetch("https://api.brevo.com/v3/contacts", {
+      method: "POST",
+      headers: {
+        "accept": "application/json",
+        "content-type": "application/json",
+        "api-key": brevoApiKey
+      },
+      body: JSON.stringify({
+        email: email,
+        attributes: {
+          FIRSTNAME: nome,
+          LASTNAME: cognome,
+          SMS: telFormatted
+        },
+        listIds: [38],
+        updateEnabled: true
+      })
+    });
+    const contactData = await contactResp.json();
+    console.log("[Brevo CRM] Risposta:", JSON.stringify(contactData));
+
+    if (contactData.code === "duplicate_parameter") {
+      const updateResp = await fetch(`https://api.brevo.com/v3/contacts/${encodeURIComponent(email)}`, {
+        method: "PUT",
         headers: {
           "accept": "application/json",
           "content-type": "application/json",
           "api-key": brevoApiKey
         },
         body: JSON.stringify({
-          email: email,
           attributes: {
             FIRSTNAME: nome,
             LASTNAME: cognome,
-            SMS: tel
+            SMS: telFormatted
           },
-          listIds: [38],
-          updateEnabled: true
+          listIds: [38]
         })
-      })
-      .then(r => r.json())
-      .then(data => console.log("[Brevo CRM] Contatto sincronizzato:", data))
-      .catch(err => console.error("[Brevo CRM] Errore sincronizzazione contatto:", err));
+      });
+      const updateData = await updateResp.text();
+      console.log("[Brevo CRM] Aggiornamento contatto:", updateData);
+    }
+  } catch (err) {
+    console.error("[Brevo CRM] Errore sincronizzazione contatto:", err);
+  }
+}atch(err => console.error("[Brevo CRM] Errore sincronizzazione contatto:", err));
     }
   } else {
     console.warn("[Brevo] Nessuna BREVO_API_KEY trovata nell'ambiente. Autosalvataggio locale nel database json completato.");
