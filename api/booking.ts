@@ -1,4 +1,10 @@
-import type { VercelRequest, VercelResponse } from "@vercel/node";
+import type { IncomingMessage, ServerResponse } from "http";
+
+type VercelRequest = IncomingMessage & { body: any };
+type VercelResponse = ServerResponse & {
+  status: (code: number) => VercelResponse;
+  json: (data: any) => void;
+};
 
 function normalizePhone(tel: string): string {
   const digits = tel.replace(/\D/g, "");
