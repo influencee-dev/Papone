@@ -1,4 +1,4 @@
-import type { IncomingMessage, ServerResponse } from "http";
+export default async function handler(req: any, res: any) {
 
 type VercelRequest = IncomingMessage & { body: any };
 type VercelResponse = ServerResponse & {
