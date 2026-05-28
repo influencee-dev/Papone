@@ -1,11 +1,3 @@
-export default async function handler(req: any, res: any) {
-
-type VercelRequest = IncomingMessage & { body: any };
-type VercelResponse = ServerResponse & {
-  status: (code: number) => VercelResponse;
-  json: (data: any) => void;
-};
-
 function normalizePhone(tel: string): string {
   const digits = tel.replace(/\D/g, "");
   if (digits.startsWith("39") && digits.length >= 11) return `+${digits}`;
@@ -13,7 +5,7 @@ function normalizePhone(tel: string): string {
   return `+39${digits}`;
 }
 
-export default async function handler(req: VercelRequest, res: VercelResponse) {
+export default async function handler(req: any, res: any) {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
   }
