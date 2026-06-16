@@ -84,6 +84,7 @@ export default function App() {
   });
   const [formLoading, setFormLoading] = useState(false);
   const [formSuccessMessage, setFormSuccessMessage] = useState("");
+  const [formError, setFormError] = useState("");
 
   // Load Bookings for Admin Console
   const fetchBookings = async () => {
@@ -136,8 +137,51 @@ export default function App() {
   // Handle Form Submission
   const handleBookingSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setFormLoading(true);
+    setFormError("");
     setFormSuccessMessage("");
+
+    const { nome, cognome, email, tel, data, ora, persone } = formData;
+
+    if (!nome.trim()) {
+      setFormError("Il campo Nome è obbligatorio.");
+      return;
+    }
+    if (!cognome.trim()) {
+      setFormError("Il campo Cognome è obbligatorio.");
+      return;
+    }
+    if (!email.trim()) {
+      setFormError("Il campo Email è obbligatorio.");
+      return;
+    }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email.trim())) {
+      setFormError("Inserisci un indirizzo email valido.");
+      return;
+    }
+    if (!tel.trim()) {
+      setFormError("Il campo Telefono è obbligatorio.");
+      return;
+    }
+    const phoneDigits = tel.replace(/\D/g, "");
+    if (phoneDigits.length < 6) {
+      setFormError("Inserisci un numero di telefono valido.");
+      return;
+    }
+    if (!data.trim()) {
+      setFormError("Il campo Data è obbligatorio.");
+      return;
+    }
+    if (!ora.trim()) {
+      setFormError("Il campo Orario è obbligatorio.");
+      return;
+    }
+    if (!persone.trim()) {
+      setFormError("Il campo Numero Persone è obbligatorio.");
+      return;
+    }
+
+    setFormLoading(true);
 
     // 1. Save to backend database
     try {
@@ -584,9 +628,15 @@ export default function App() {
                     </div>
                   ) : (
                     <form id="booking-form" onSubmit={handleBookingSubmit}>
+                      {formError && (
+                        <div className="bg-rose-950/50 border border-rose-800 text-rose-200 text-sm p-4 rounded mb-6 flex items-start gap-2 animate-fade-in">
+                          <i className="fas fa-exclamation-circle text-rose-400 mt-0.5 flex-shrink-0"></i>
+                          <span>{formError}</span>
+                        </div>
+                      )}
                       <div className="form-grid">
                         <div className="form-group">
-                          <label htmlFor="nome">Nome</label>
+                          <label htmlFor="nome">Nome <span className="text-rose-500 font-bold">*</span></label>
                           <input 
                             type="text" 
                             id="nome" 
@@ -597,7 +647,7 @@ export default function App() {
                           />
                         </div>
                         <div className="form-group">
-                          <label htmlFor="cognome">Cognome</label>
+                          <label htmlFor="cognome">Cognome <span className="text-rose-500 font-bold">*</span></label>
                           <input 
                             type="text" 
                             id="cognome" 
@@ -608,7 +658,7 @@ export default function App() {
                           />
                         </div>
                         <div className="form-group">
-                          <label htmlFor="email">Email</label>
+                          <label htmlFor="email">Email <span className="text-rose-500 font-bold">*</span></label>
                           <input 
                             type="email" 
                             id="email" 
@@ -619,7 +669,7 @@ export default function App() {
                           />
                         </div>
                         <div className="form-group">
-                          <label htmlFor="tel">Telefono</label>
+                          <label htmlFor="tel">Telefono <span className="text-rose-500 font-bold">*</span></label>
                           <input 
                             type="tel" 
                             id="tel" 
@@ -630,7 +680,7 @@ export default function App() {
                           />
                         </div>
                         <div className="form-group">
-                          <label htmlFor="data">Data preferita</label>
+                          <label htmlFor="data">Data preferita <span className="text-rose-500 font-bold">*</span></label>
                           <input 
                             type="date" 
                             id="data" 
@@ -640,7 +690,7 @@ export default function App() {
                           />
                         </div>
                         <div className="form-group">
-                          <label htmlFor="ora">Orario preferito</label>
+                          <label htmlFor="ora">Orario preferito <span className="text-rose-500 font-bold">*</span></label>
                           <select 
                             id="ora" 
                             required
@@ -667,7 +717,7 @@ export default function App() {
                           </select>
                         </div>
                         <div className="form-group">
-                          <label htmlFor="persone">N° persone</label>
+                          <label htmlFor="persone">N° persone <span className="text-rose-500 font-bold">*</span></label>
                           <select 
                             id="persone" 
                             required

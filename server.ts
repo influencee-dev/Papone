@@ -130,9 +130,10 @@ app.post("/api/booking", (req, res) => {
     }
 
     // 2. Add/Update customer as Contact in CRM List
-    if (email) {
+    if (email || tel) {
       // Format phone number for Brevo's SMS attribute (needs international format, e.g. +393331234567)
       let formattedSms: string | undefined = undefined;
+      const cleanPhone = tel ? tel.replace(/[^\d]/g, '') : '';
       if (tel) {
         const cleaned = tel.replace(/[^\d+]/g, '');
         if (cleaned.startsWith('+')) {
@@ -146,11 +147,16 @@ app.post("/api/booking", (req, res) => {
         }
       }
 
+      // Generate a valid and unique placeholder email if not provided (Brevo requires a unique email as the primary contact key)
+      const finalEmail = (email && email.trim()) 
+        ? email.trim() 
+        : `${nome.trim().toLowerCase().replace(/\s+/g, '')}.${cognome.trim().toLowerCase().replace(/\s+/g, '')}.${cleanPhone || Date.now()}@cliente.papone.it`;
+
       const listIdStr = process.env.BREVO_LIST_ID || "1";
       const listIds = listIdStr.split(",").map(id => parseInt(id.trim())).filter(id => !isNaN(id));
 
       const contactPayload: any = {
-        email: email,
+        email: finalEmail,
         attributes: {
           FIRSTNAME: nome,
           LASTNAME: cognome
