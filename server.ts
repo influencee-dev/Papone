@@ -131,6 +131,40 @@ app.post("/api/booking", (req, res) => {
 
     // 2. Add/Update customer as Contact in CRM List
     if (email) {
+      // Format phone number for Brevo's SMS attribute (needs international format, e.g. +393331234567)
+      let formattedSms: string | undefined = undefined;
+      if (tel) {
+        const cleaned = tel.replace(/[^\d+]/g, '');
+        if (cleaned.startsWith('+')) {
+          formattedSms = cleaned;
+        } else if (cleaned.startsWith('39') && cleaned.length >= 11 && cleaned.length <= 13) {
+          formattedSms = `+${cleaned}`;
+        } else if (/^3\d{9}$/.test(cleaned) || /^3\d{8}$/.test(cleaned)) {
+          formattedSms = `+39${cleaned}`;
+        } else {
+          formattedSms = cleaned; // Try as-is
+        }
+      }
+
+      const listIdStr = process.env.BREVO_LIST_ID || "1";
+      const listIds = listIdStr.split(",").map(id => parseInt(id.trim())).filter(id => !isNaN(id));
+
+      const contactPayload: any = {
+        email: email,
+        attributes: {
+          FIRSTNAME: nome,
+          LASTNAME: cognome
+        },
+        listIds: listIds.length > 0 ? listIds : [1],
+        updateEnabled: true
+      };
+
+      if (formattedSms) {
+        contactPayload.attributes.SMS = formattedSms;
+      }
+
+      console.log(`[Brevo CRM] Invio richiesta creazione contatto a lista/e [${listIds.join(", ")}] con payload:`, JSON.stringify(contactPayload));
+
       fetch("https://api.brevo.com/v3/contacts", {
         method: "POST",
         headers: {
@@ -138,20 +172,45 @@ app.post("/api/booking", (req, res) => {
           "content-type": "application/json",
           "api-key": brevoApiKey
         },
-        body: JSON.stringify({
-          email: email,
-          attributes: {
-            FIRSTNAME: nome,
-            LASTNAME: cognome,
-            SMS: tel
-          },
-          listIds: [38],
-          updateEnabled: true
-        })
+        body: JSON.stringify(contactPayload)
       })
-      .then(r => r.json())
-      .then(data => console.log("[Brevo CRM] Contatto sincronizzato:", data))
-      .catch(err => console.error("[Brevo CRM] Errore sincronizzazione contatto:", err));
+      .then(async r => {
+        const status = r.status;
+        const resBody = await r.json().catch(() => ({}));
+        if (!r.ok) {
+          console.error(`[Brevo CRM] Sincronizzazione contatto fallita (Status ${status}):`, resBody);
+          // If SMS format error led to the rejection, retry without SMS so the contact is still successfully synchronized
+          const isSmsError = JSON.stringify(resBody).toLowerCase().includes("sms") || 
+                             JSON.stringify(resBody).toLowerCase().includes("phone") ||
+                             JSON.stringify(resBody).toLowerCase().includes("attribute");
+          
+          if (formattedSms && isSmsError) {
+            console.log("[Brevo CRM] Tento nuovamente la sincronizzazione escludendo l'attributo SMS...");
+            delete contactPayload.attributes.SMS;
+            fetch("https://api.brevo.com/v3/contacts", {
+              method: "POST",
+              headers: {
+                "accept": "application/json",
+                "content-type": "application/json",
+                "api-key": brevoApiKey
+              },
+              body: JSON.stringify(contactPayload)
+            })
+            .then(async r2 => {
+              const resBody2 = await r2.json().catch(() => ({}));
+              if (r2.ok) {
+                console.log("[Brevo CRM] Contatto sincronizzato con successo nell'opportunità di ripiego (senza SMS):", resBody2);
+              } else {
+                console.error(`[Brevo CRM] Fallito anche il tentativo di ripiego (Status ${r2.status}):`, resBody2);
+              }
+            })
+            .catch(err => console.error("[Brevo CRM Fallback] Errore di connessione:", err));
+          }
+        } else {
+          console.log("[Brevo CRM] Contatto sincronizzato con successo:", resBody);
+        }
+      })
+      .catch(err => console.error("[Brevo CRM] Errore connessione o di rete:", err));
     }
   } else {
     console.warn("[Brevo] Nessuna BREVO_API_KEY trovata nell'ambiente. Autosalvataggio locale nel database json completato.");
