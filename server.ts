@@ -30,15 +30,10 @@ function saveBookings(bookings: any[]) {
     console.error("Errore scrittura database prenotazioni:", err);
   }
 }
-function normalizePhone(tel: string): string {
-  const digits = tel.replace(/\D/g, "");
-  if (digits.startsWith("39") && digits.length >= 11) return `+${digits}`;
-  if (digits.startsWith("0039")) return `+${digits.slice(2)}`;
-  return `+39${digits}`;
-}
+
 // 1. POST /api/booking - Create a booking
-app.post("/api/booking", async (req, res) => { 
-  const { nome, cognome, email, tel, data, persone, note } = req.body;
+app.post("/api/booking", (req, res) => {
+  const { nome, cognome, email, tel, data, ora, persone, note } = req.body;
   
   if (!nome || !cognome || !tel || !data || !persone) {
     return res.status(400).json({ error: "Campi obbligatori mancanti" });
@@ -52,6 +47,7 @@ app.post("/api/booking", async (req, res) => {
     email: email || "",
     tel,
     data,
+    ora: ora || "19:30",
     persone,
     note: note || "",
     status: "In attesa", // "In attesa", "Confermato", "Cancellato"
@@ -65,8 +61,13 @@ app.post("/api/booking", async (req, res) => {
 
   // Brevo API Integration if BREVO_API_KEY is supplied
   const brevoApiKey = process.env.BREVO_API_KEY;
-  try {
-      const emailResp = await fetch("https://api.brevo.com/v3/smtp/email", {
+  if (brevoApiKey) {
+    console.log("[Brevo] Key rilevata. Sincronizzazione contatto ed eventuale invio notifica...");
+    const receiverEmail = process.env.BREVO_RECEIVER_EMAIL;
+
+    // 1. Send transactional email to owner if configured and not alessandro_doc@live.it
+    if (receiverEmail && receiverEmail.trim().toLowerCase() !== "alessandro_doc@live.it") {
+      fetch("https://api.brevo.com/v3/smtp/email", {
         method: "POST",
         headers: {
           "accept": "application/json",
@@ -74,7 +75,7 @@ app.post("/api/booking", async (req, res) => {
           "api-key": brevoApiKey
         },
         body: JSON.stringify({
-          sender: { name: "Sito Web Papone", email: receiverEmail },
+          sender: { name: "Sito Web Papone", email: "prenotazioni@papone.it" },
           to: [{ email: receiverEmail, name: "Papone dal 1956" }],
           subject: `Nuova Prenotazione: ${nome} ${cognome} (${persone} persone)`,
           htmlContent: `
@@ -90,7 +91,7 @@ app.post("/api/booking", async (req, res) => {
                     </tr>
                     <tr>
                       <td style="padding: 10px; border-bottom: 1px solid #333333; font-weight: bold; color: #d4a84b;">Data Richiesta:</td>
-                      <td style="padding: 10px; border-bottom: 1px solid #333333; color: #ffffff;">${data}</td>
+                      <td style="padding: 10px; border-bottom: 1px solid #333333; color: #ffffff;">${data} alle ${ora || "19:30"}</td>
                     </tr>
                     <tr>
                       <td style="padding: 10px; border-bottom: 1px solid #333333; font-weight: bold; color: #d4a84b;">N° Coperti:</td>
@@ -120,67 +121,37 @@ app.post("/api/booking", async (req, res) => {
             </html>
           `
         })
-      });
-      const emailData = await emailResp.json();
-      console.log("[Brevo SMTP] Risposta:", JSON.stringify(emailData));
-    } catch (err) {
-      console.error("[Brevo SMTP] Errore invio email:", err);
-    }
-        `
       })
-    })
-    .then(r => r.json())
-    .then(data => console.log("[Brevo SMTP] Email inviata con successo:", data))
-    .catch(err => console.error("[Brevo SMTP] Errore invio email:", err));
+      .then(r => r.json())
+      .then(data => console.log("[Brevo SMTP] Email inviata con successo:", data))
+      .catch(err => console.error("[Brevo SMTP] Errore invio email:", err));
+    } else {
+      console.log("[Brevo SMTP] Invio email omesso: nessun destinatario configurato o indirizzo alessandro_doc@live.it escluso.");
+    }
 
     // 2. Add/Update customer as Contact in CRM List
     if (email) {
-  try {
-    const contactResp = await fetch("https://api.brevo.com/v3/contacts", {
-      method: "POST",
-      headers: {
-        "accept": "application/json",
-        "content-type": "application/json",
-        "api-key": brevoApiKey
-      },
-      body: JSON.stringify({
-        email: email,
-        attributes: {
-          FIRSTNAME: nome,
-          LASTNAME: cognome,
-          SMS: telFormatted
-        },
-        listIds: [38],
-        updateEnabled: true
-      })
-    });
-    const contactData = await contactResp.json();
-    console.log("[Brevo CRM] Risposta:", JSON.stringify(contactData));
-
-    if (contactData.code === "duplicate_parameter") {
-      const updateResp = await fetch(`https://api.brevo.com/v3/contacts/${encodeURIComponent(email)}`, {
-        method: "PUT",
+      fetch("https://api.brevo.com/v3/contacts", {
+        method: "POST",
         headers: {
           "accept": "application/json",
           "content-type": "application/json",
           "api-key": brevoApiKey
         },
         body: JSON.stringify({
+          email: email,
           attributes: {
             FIRSTNAME: nome,
             LASTNAME: cognome,
-            SMS: telFormatted
+            SMS: tel
           },
-          listIds: [38]
+          listIds: [38],
+          updateEnabled: true
         })
-      });
-      const updateData = await updateResp.text();
-      console.log("[Brevo CRM] Aggiornamento contatto:", updateData);
-    }
-  } catch (err) {
-    console.error("[Brevo CRM] Errore sincronizzazione contatto:", err);
-  }
-}atch(err => console.error("[Brevo CRM] Errore sincronizzazione contatto:", err));
+      })
+      .then(r => r.json())
+      .then(data => console.log("[Brevo CRM] Contatto sincronizzato:", data))
+      .catch(err => console.error("[Brevo CRM] Errore sincronizzazione contatto:", err));
     }
   } else {
     console.warn("[Brevo] Nessuna BREVO_API_KEY trovata nell'ambiente. Autosalvataggio locale nel database json completato.");

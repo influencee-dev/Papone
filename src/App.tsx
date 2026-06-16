@@ -7,6 +7,7 @@ interface Booking {
   email: string;
   tel: string;
   data: string;
+  ora?: string;
   persone: string;
   note: string;
   status: string;
@@ -77,6 +78,7 @@ export default function App() {
     email: "",
     tel: "",
     data: "",
+    ora: "19:30",
     persone: "2",
     note: "",
   });
@@ -157,6 +159,7 @@ export default function App() {
     let message = `Ciao Papone! Vorrei richiedere una prenotazione:\n\n`;
     message += `👤 *Nome*: ${formData.nome} ${formData.cognome}\n`;
     message += `📅 *Data*: ${formData.data}\n`;
+    message += `⏰ *Orario*: ${formData.ora}\n`;
     message += `👥 *Persone*: ${formData.persone}\n`;
     message += `📞 *Telefono*: ${formData.tel}\n`;
     message += `📧 *Email*: ${formData.email || "Non inserita"}\n`;
@@ -180,6 +183,7 @@ export default function App() {
       email: "",
       tel: "",
       data: "",
+      ora: "19:30",
       persone: "2",
       note: "",
     });
@@ -286,7 +290,7 @@ export default function App() {
                     <div className="grid grid-cols-2 gap-2 text-sm text-neutral-300 font-mono py-2 border-y border-neutral-800/50">
                       <div>
                         <span className="text-xs text-neutral-500 block">DATA RICHIESTA</span>
-                        <span className="font-bold text-white">{b.data}</span>
+                        <span className="font-bold text-white">{b.data} {b.ora ? `alle ${b.ora}` : ""}</span>
                       </div>
                       <div>
                         <span className="text-xs text-neutral-500 block">N° COPERTI</span>
@@ -636,6 +640,33 @@ export default function App() {
                           />
                         </div>
                         <div className="form-group">
+                          <label htmlFor="ora">Orario preferito</label>
+                          <select 
+                            id="ora" 
+                            required
+                            value={formData.ora}
+                            onChange={(e) => setFormData({ ...formData, ora: e.target.value })}
+                          >
+                            <option value="19:30">19:30</option>
+                            <option value="19:45">19:45</option>
+                            <option value="20:00">20:00</option>
+                            <option value="20:15">20:15</option>
+                            <option value="20:30">20:30</option>
+                            <option value="20:45">20:45</option>
+                            <option value="21:00">21:00</option>
+                            <option value="21:15">21:15</option>
+                            <option value="21:30">21:30</option>
+                            <option value="21:45">21:45</option>
+                            <option value="22:00">22:00</option>
+                            <option value="22:15">22:15</option>
+                            <option value="22:30">22:30</option>
+                            <option value="22:45">22:45</option>
+                            <option value="23:00">23:00</option>
+                            <option value="23:15">23:15</option>
+                            <option value="23:30">23:30</option>
+                          </select>
+                        </div>
+                        <div className="form-group">
                           <label htmlFor="persone">N° persone</label>
                           <select 
                             id="persone" 
@@ -711,14 +742,14 @@ export default function App() {
                     Orari di Apertura
                   </h4>
                   <div className="hour-row"><span>Lunedì</span><span style={{ color: "var(--color-accent)", fontWeight: "bold" }}>CHIUSO</span></div>
-                  <div className="hour-row"><span>Martedì</span><span>20:00 – 02:00</span></div>
-                  <div className="hour-row"><span>Mercoledì</span><span>20:00 – 02:00</span></div>
-                  <div className="hour-row"><span>Giovedì</span><span>20:00 – 02:00</span></div>
-                  <div className="hour-row"><span>Venerdì</span><span>20:00 – 02:00</span></div>
-                  <div className="hour-row"><span>Sabato</span><span>20:00 – 01:00</span></div>
-                  <div className="hour-row"><span>Domenica</span><span style={{ color: "var(--color-accent)", fontWeight: "bold" }}>CHIUSO</span></div>
+                  <div className="hour-row"><span>Martedì</span><span>19:30 – 02:00</span></div>
+                  <div className="hour-row"><span>Mercoledì</span><span>19:30 – 02:00</span></div>
+                  <div className="hour-row"><span>Giovedì</span><span>19:30 – 02:00</span></div>
+                  <div className="hour-row"><span>Venerdì</span><span>19:30 – 02:00</span></div>
+                  <div className="hour-row"><span>Sabato</span><span>19:30 – 02:00</span></div>
+                  <div className="hour-row"><span>Domenica</span><span>19:30 – 02:00</span></div>
                   <p style={{ marginTop: "20px", fontWeight: "bold", color: "var(--color-accent)", fontSize: "1.2rem" }} className="bebas">
-                    MARTEDÌ – SABATO
+                    MARTEDÌ – DOMENICA
                   </p>
                   
                   <div style={{ marginTop: "30px", display: "flex", flexWrap: "wrap", gap: "20px", color: "var(--color-text-muted)", fontSize: "0.9rem" }}>
@@ -1756,11 +1787,9 @@ export default function App() {
             <div className="footer-col">
               <h4>Orari di Apertura</h4>
               <ul className="footer-links" style={{ fontSize: "0.95rem" }}>
-                <li className="text-neutral-200">Martedì – Venerdì</li>
-                <li style={{ fontSize: "1.1rem", color: "var(--color-text)", marginBottom: "8px" }}>20:00 – 02:00</li>
-                <li className="text-neutral-200">Sabato</li>
-                <li style={{ fontSize: "1.1rem", color: "var(--color-text)", marginBottom: "8px" }}>20:00 – 01:00</li>
-                <li className="text-neutral-200">Domenica e Lunedì</li>
+                <li className="text-neutral-200">Martedì – Domenica</li>
+                <li style={{ fontSize: "1.1rem", color: "var(--color-text)", marginBottom: "8px" }}>19:30 – 02:00</li>
+                <li className="text-neutral-200">Lunedì</li>
                 <li style={{ fontSize: "1.1rem", color: "var(--color-accent)", fontWeight: "bold" }}>CHIUSO</li>
               </ul>
             </div>
