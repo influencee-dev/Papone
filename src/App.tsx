@@ -791,7 +791,7 @@ export default function App() {
                   <h4 className="bebas" style={{ color: "var(--color-accent)", marginBottom: "20px", fontSize: "1.5rem" }}>
                     Orari di Apertura
                   </h4>
-                  <div className="hour-row"><span>Lunedì</span>span>19:30 – 02:00</span></div>
+                  <div className="hour-row"><span>Lunedì</span><span>19:30 – 02:00</span></div>
                   <div className="hour-row"><span>Martedì</span><span>19:30 – 02:00</span></div>
                   <div className="hour-row"><span>Mercoledì</span><span>19:30 – 02:00</span></div>
                   <div className="hour-row"><span>Giovedì</span><span>19:30 – 02:00</span></div>
@@ -1837,9 +1837,9 @@ export default function App() {
             <div className="footer-col">
               <h4>Orari di Apertura</h4>
               <ul className="footer-links" style={{ fontSize: "0.95rem" }}>
-                <li className="text-neutral-200">Martedì – Domenica</li>
+                <li className="text-neutral-200">Lunedì – Sabato</li>
                 <li style={{ fontSize: "1.1rem", color: "var(--color-text)", marginBottom: "8px" }}>19:30 – 02:00</li>
-                <li className="text-neutral-200">Lunedì</li>
+                <li className="text-neutral-200">Domenica</li>
                 <li style={{ fontSize: "1.1rem", color: "var(--color-accent)", fontWeight: "bold" }}>CHIUSO</li>
               </ul>
             </div>
