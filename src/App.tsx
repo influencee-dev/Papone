@@ -799,7 +799,7 @@ export default function App() {
                   <div className="hour-row"><span>Sabato</span><span>19:30 – 02:00</span></div>
                   <div className="hour-row"><span>Domenica</span><span style={{ color: "var(--color-accent)", fontWeight: "bold" }}>CHIUSO</span></div>
                   <p style={{ marginTop: "20px", fontWeight: "bold", color: "var(--color-accent)", fontSize: "1.2rem" }} className="bebas">
-                    MARTEDÌ – DOMENICA
+                    LUNEDì - SABATO
                   </p>
                   
                   <div style={{ marginTop: "30px", display: "flex", flexWrap: "wrap", gap: "20px", color: "var(--color-text-muted)", fontSize: "0.9rem" }}>
