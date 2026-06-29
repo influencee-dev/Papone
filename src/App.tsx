@@ -791,13 +791,13 @@ export default function App() {
                   <h4 className="bebas" style={{ color: "var(--color-accent)", marginBottom: "20px", fontSize: "1.5rem" }}>
                     Orari di Apertura
                   </h4>
-                  <div className="hour-row"><span>Lunedì</span><span style={{ color: "var(--color-accent)", fontWeight: "bold" }}>CHIUSO</span></div>
+                  <div className="hour-row"><span>Lunedì</span>span>19:30 – 02:00</span></div>
                   <div className="hour-row"><span>Martedì</span><span>19:30 – 02:00</span></div>
                   <div className="hour-row"><span>Mercoledì</span><span>19:30 – 02:00</span></div>
                   <div className="hour-row"><span>Giovedì</span><span>19:30 – 02:00</span></div>
                   <div className="hour-row"><span>Venerdì</span><span>19:30 – 02:00</span></div>
                   <div className="hour-row"><span>Sabato</span><span>19:30 – 02:00</span></div>
-                  <div className="hour-row"><span>Domenica</span><span>19:30 – 02:00</span></div>
+                  <div className="hour-row"><span>Domenica</span><span style={{ color: "var(--color-accent)", fontWeight: "bold" }}>CHIUSO</span></div>
                   <p style={{ marginTop: "20px", fontWeight: "bold", color: "var(--color-accent)", fontSize: "1.2rem" }} className="bebas">
                     MARTEDÌ – DOMENICA
                   </p>
