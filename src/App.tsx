@@ -791,15 +791,15 @@ export default function App() {
                   <h4 className="bebas" style={{ color: "var(--color-accent)", marginBottom: "20px", fontSize: "1.5rem" }}>
                     Orari di Apertura
                   </h4>
-                  <div className="hour-row"><span>Lunedì</span><span>19:30 – 02:00</span></div>
+                  <div className="hour-row"><span>Lunedì</span><span style={{ color: "var(--color-accent)", fontWeight: "bold" }}>CHIUSO</span></div>
                   <div className="hour-row"><span>Martedì</span><span>19:30 – 02:00</span></div>
                   <div className="hour-row"><span>Mercoledì</span><span>19:30 – 02:00</span></div>
                   <div className="hour-row"><span>Giovedì</span><span>19:30 – 02:00</span></div>
                   <div className="hour-row"><span>Venerdì</span><span>19:30 – 02:00</span></div>
                   <div className="hour-row"><span>Sabato</span><span>19:30 – 02:00</span></div>
-                  <div className="hour-row"><span>Domenica</span><span style={{ color: "var(--color-accent)", fontWeight: "bold" }}>CHIUSO</span></div>
+                  <div className="hour-row"><span>Domenica</span><span>19:30 – 02:00</span></div>
                   <p style={{ marginTop: "20px", fontWeight: "bold", color: "var(--color-accent)", fontSize: "1.2rem" }} className="bebas">
-                    LUNEDì - SABATO
+                    MARTEDÌ – DOMENICA
                   </p>
                   
                   <div style={{ marginTop: "30px", display: "flex", flexWrap: "wrap", gap: "20px", color: "var(--color-text-muted)", fontSize: "0.9rem" }}>
@@ -853,8 +853,43 @@ export default function App() {
                   <div className="menu-item">
                     <div className="item-info">
                       <div className="item-header">
-                        <span className="item-name text-white">Fiori di zucca (5 pezzi)</span>
-                        <span className="item-price">€ 5.00</span>
+                        <span className="item-name text-white">Mix salumi e formaggi (consigliato per 2p)</span>
+                        <span className="item-price">€ 18.00</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="menu-item">
+                    <div className="item-info">
+                      <div className="item-header">
+                        <span className="item-name text-white">Contorni (piatto 4 prodotti)</span>
+                        <span className="item-price">€ 6.00</span>
+                      </div>
+                      <p className="item-desc text-neutral-400">
+                        4 scelte dal banco (i prodotti variano in base alla stagionalità)
+                      </p>
+                    </div>
+                  </div>
+                  <div className="menu-item">
+                    <div className="item-info">
+                      <div className="item-header">
+                        <span className="item-name text-white">Bruschetta</span>
+                        <span className="item-price">€ 6.00</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="menu-item">
+                    <div className="item-info">
+                      <div className="item-header">
+                        <span className="item-name text-white">Parmigiana</span>
+                        <span className="item-price">€ 7.00</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="menu-item">
+                    <div className="item-info">
+                      <div className="item-header">
+                        <span className="item-name text-white">Fiori di zucca (4 pezzi)</span>
+                        <span className="item-price">€ 6.00</span>
                       </div>
                     </div>
                   </div>
@@ -869,8 +904,8 @@ export default function App() {
                   <div className="menu-item">
                     <div className="item-info">
                       <div className="item-header">
-                        <span className="item-name text-white">Triangolo speck e patate (5 pezzi)</span>
-                        <span className="item-price">€ 5.00</span>
+                        <span className="item-name text-white">Triangolo speck e patate</span>
+                        <span className="item-price">€ 6.00</span>
                       </div>
                     </div>
                   </div>
@@ -886,7 +921,7 @@ export default function App() {
                     <div className="item-info">
                       <div className="item-header">
                         <span className="item-name text-white">Nuggets di pollo (6 pezzi)</span>
-                        <span className="item-price">€ 4.00</span>
+                        <span className="item-price">€ 6.00</span>
                       </div>
                     </div>
                   </div>
@@ -894,7 +929,7 @@ export default function App() {
                     <div className="item-info">
                       <div className="item-header">
                         <span className="item-name text-white">Stick di mozzarella (5 pezzi)</span>
-                        <span className="item-price">€ 5.00</span>
+                        <span className="item-price">€ 6.00</span>
                       </div>
                     </div>
                   </div>
@@ -902,7 +937,7 @@ export default function App() {
                     <div className="item-info">
                       <div className="item-header">
                         <span className="item-name text-white">Olive ascolane (6 pezzi)</span>
-                        <span className="item-price">€ 3.00</span>
+                        <span className="item-price">€ 6.00</span>
                       </div>
                     </div>
                   </div>
@@ -910,33 +945,6 @@ export default function App() {
                     <div className="item-info">
                       <div className="item-header">
                         <span className="item-name text-white">Patatine fritte</span>
-                        <span className="item-price">€ 3.00</span>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="menu-item">
-                    <div className="item-info">
-                      <div className="item-header">
-                        <span className="item-name text-white">Patate dolci americane</span>
-                        <span className="item-price">€ 4.00</span>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="menu-item">
-                    <div className="item-info">
-                      <div className="item-header">
-                        <span className="item-name text-white">Patate cheddar e bacon</span>
-                        <span className="item-price">€ 4.90</span>
-                      </div>
-                      <p className="item-desc text-neutral-400">
-                        * € 5.90 con doppio cheddar e bacon croccante
-                      </p>
-                    </div>
-                  </div>
-                  <div className="menu-item">
-                    <div className="item-info">
-                      <div className="item-header">
-                        <span className="item-name text-white">Parmigiana</span>
                         <span className="item-price">€ 5.00</span>
                       </div>
                     </div>
@@ -944,35 +952,16 @@ export default function App() {
                   <div className="menu-item">
                     <div className="item-info">
                       <div className="item-header">
-                        <span className="item-name text-white">Mix di affettati</span>
-                        <span className="item-price">€ 6.00</span>
+                        <span className="item-name text-white">Patata americana</span>
+                        <span className="item-price">€ 6.50</span>
                       </div>
                     </div>
                   </div>
                   <div className="menu-item">
                     <div className="item-info">
                       <div className="item-header">
-                        <span className="item-name text-white">Formaggi mix</span>
-                        <span className="item-price">€ 6.00</span>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="menu-item">
-                    <div className="item-info">
-                      <div className="item-header">
-                        <span className="item-name text-white">Contorni (piatto small)</span>
-                        <span className="item-price">€ 4.00</span>
-                      </div>
-                      <p className="item-desc text-neutral-400">
-                        4 scelte dal banco (i prodotti variano in base alla stagionalità)
-                      </p>
-                    </div>
-                  </div>
-                  <div className="menu-item">
-                    <div className="item-info">
-                      <div className="item-header">
-                        <span className="item-name text-white">Bruschetta</span>
-                        <span className="item-price">€ 5.00</span>
+                        <span className="item-name text-white">Patata cheddar e bacon</span>
+                        <span className="item-price">€ 7.00</span>
                       </div>
                     </div>
                   </div>
@@ -1022,7 +1011,7 @@ export default function App() {
                     <div className="item-info">
                       <div className="item-header">
                         <span className="item-name text-white">Hamburger di vitello</span>
-                        <span className="item-price">€ 6.00</span>
+                        <span className="item-price">€ 7.00</span>
                       </div>
                     </div>
                   </div>
@@ -1030,15 +1019,15 @@ export default function App() {
                     <div className="item-info">
                       <div className="item-header">
                         <span className="item-name text-white">Hamburger di pollo</span>
-                        <span className="item-price">€ 6.00</span>
+                        <span className="item-price">€ 7.00</span>
                       </div>
                     </div>
                   </div>
                   <div className="menu-item">
                     <div className="item-info">
                       <div className="item-header">
-                        <span className="item-name text-white">Hamburger Scottona</span>
-                        <span className="item-price">€ 8.00</span>
+                        <span className="item-name text-white">Hamburger di Scottona</span>
+                        <span className="item-price">€ 9.00</span>
                       </div>
                     </div>
                   </div>
@@ -1046,7 +1035,7 @@ export default function App() {
                     <div className="item-info">
                       <div className="item-header">
                         <span className="item-name text-white">Mortadella alla brace</span>
-                        <span className="item-price">€ 4.00</span>
+                        <span className="item-price">€ 6.00</span>
                       </div>
                     </div>
                   </div>
@@ -1062,10 +1051,10 @@ export default function App() {
                     <div className="item-info">
                       <div className="item-header">
                         <span className="item-name text-white">Tagliata di Scottona (250g)</span>
-                        <span className="item-price">€ 18.00</span>
+                        <span className="item-price">€ 20.00</span>
                       </div>
                       <p className="item-desc text-neutral-400">
-                        Rucola, pomodorini e grana
+                        Con grana, pomodori e rucola
                       </p>
                     </div>
                   </div>
@@ -1081,34 +1070,42 @@ export default function App() {
                     <div className="item-info">
                       <div className="item-header">
                         <span className="item-name text-white">Wurstel di pollo</span>
-                        <span className="item-price">€ 4.00</span>
+                        <span className="item-price">€ 5.00</span>
                       </div>
                     </div>
                   </div>
                   <div className="menu-item">
                     <div className="item-info">
                       <div className="item-header">
-                        <span className="item-name text-white">Torcinelli (5 pezzi)</span>
-                        <span className="item-price">€ 6.50</span>
+                        <span className="item-name text-white">Torcinelli (6 pezzi)</span>
+                        <span className="item-price">€ 8.00</span>
                       </div>
                     </div>
                   </div>
                   <div className="menu-item">
                     <div className="item-info">
                       <div className="item-header">
-                        <span className="item-name text-white">Paccanelli (5 pezzi)</span>
-                        <span className="item-price">€ 6.50</span>
+                        <span className="item-name text-white">Paccanelli (6 pezzi)</span>
+                        <span className="item-price">€ 8.00</span>
                       </div>
                     </div>
                   </div>
                   <div className="menu-item">
                     <div className="item-info">
                       <div className="item-header">
-                        <span className="item-name text-white">Arrosto mix per 2 persone + 2 birre 0.4L</span>
-                        <span className="item-price">€ 30.00</span>
+                        <span className="item-name text-white">Terrina di caciocavallo</span>
+                        <span className="item-price">€ 8.00</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="menu-item">
+                    <div className="item-info">
+                      <div className="item-header">
+                        <span className="item-name text-white">Arrosto misto per 2</span>
+                        <span className="item-price">€ 40.00</span>
                       </div>
                       <p className="item-desc text-neutral-400">
-                        4 salsicce, 2 hamburger, 1 paccanello, 4 torcinelli + patatine fritte
+                        4 salsicce, 2 hamburger, 4 paccanelli, 4 torcinelli, patatine fritte e 2 contorni
                       </p>
                     </div>
                   </div>
@@ -1837,9 +1834,9 @@ export default function App() {
             <div className="footer-col">
               <h4>Orari di Apertura</h4>
               <ul className="footer-links" style={{ fontSize: "0.95rem" }}>
-                <li className="text-neutral-200">Lunedì – Sabato</li>
+                <li className="text-neutral-200">Martedì – Domenica</li>
                 <li style={{ fontSize: "1.1rem", color: "var(--color-text)", marginBottom: "8px" }}>19:30 – 02:00</li>
-                <li className="text-neutral-200">Domenica</li>
+                <li className="text-neutral-200">Lunedì</li>
                 <li style={{ fontSize: "1.1rem", color: "var(--color-accent)", fontWeight: "bold" }}>CHIUSO</li>
               </ul>
             </div>
