@@ -828,13 +828,13 @@ export default function App() {
                   </h4>
                   <div className="hour-row"><span>Lunedì</span><span style={{ color: "var(--color-accent)", fontWeight: "bold" }}>CHIUSO</span></div>
                   <div className="hour-row"><span>Martedì</span><span>19:30 – 02:00</span></div>
-                  <div className="hour-row"><span>Mercoledì</span><span>19:30 – 02:00</span></div>
-                  <div className="hour-row"><span>Giovedì</span><span>19:30 – 02:00</span></div>
+                  <div className="hour-row"><span>Mercoledì</span><span style={{ color: "var(--color-accent)", fontWeight: "bold" }}>CHIUSO</span></div>
+                  <div className="hour-row"><span>Giovedì</span><span style={{ color: "var(--color-accent)", fontWeight: "bold" }}>CHIUSO</span></div>
                   <div className="hour-row"><span>Venerdì</span><span>19:30 – 02:00</span></div>
                   <div className="hour-row"><span>Sabato</span><span>19:30 – 02:00</span></div>
                   <div className="hour-row"><span>Domenica</span><span>19:30 – 02:00</span></div>
                   <p style={{ marginTop: "20px", fontWeight: "bold", color: "var(--color-accent)", fontSize: "1.2rem" }} className="bebas">
-                    MARTEDÌ – DOMENICA
+                    APERTI MARTEDÌ · VENERDÌ · SABATO · DOMENICA
                   </p>
                   
                   <div style={{ marginTop: "30px", display: "flex", flexWrap: "wrap", gap: "20px", color: "var(--color-text-muted)", fontSize: "0.9rem" }}>
@@ -1144,17 +1144,6 @@ export default function App() {
                       </p>
                     </div>
                   </div>
-                  <div className="menu-item">
-                    <div className="item-info">
-                      <div className="item-header">
-                        <span className="item-name text-white">Arrosto mix per 4 persone + 1.5L birra</span>
-                        <span className="item-price">€ 60.00</span>
-                      </div>
-                      <p className="item-desc text-neutral-400">
-                        8 salsicce, 4 hamburger, 2 paccanelli, 6 torcinelli + patatine fritte
-                      </p>
-                    </div>
-                  </div>
                 </div>
               </div>
 
@@ -1264,46 +1253,6 @@ export default function App() {
                 </div>
               </div>
 
-              {/* LE NOSTRE COMBO */}
-              <div className="menu-category" id="menu-combo">
-                <h2 className="category-title border-b-2">Le Nostre Combo</h2>
-                <div className="menu-grid">
-                  <div className="menu-item">
-                    <div className="item-info">
-                      <div className="item-header">
-                        <span className="item-name text-white">Menù Il Buono & Il Cattivo (Adulti)</span>
-                        <span className="item-price">€ 12.99</span>
-                      </div>
-                      <p className="item-desc text-neutral-400">
-                        Panino + patatine fritte + bibita / birra 0.20 / calice di vino.
-                      </p>
-                    </div>
-                  </div>
-                  <div className="menu-item">
-                    <div className="item-info">
-                      <div className="item-header">
-                        <span className="item-name text-white">Menù Pony (Bambini)</span>
-                        <span className="item-price">€ 9.99</span>
-                      </div>
-                      <p className="item-desc text-neutral-400">
-                        Panino (con hamburger o cotoletta) + patatine fritte + bibita.
-                      </p>
-                    </div>
-                  </div>
-                  <div className="menu-item">
-                    <div className="item-info">
-                      <div className="item-header">
-                        <span className="item-name text-white">Combo Texano</span>
-                        <span className="item-price">€ 32.99</span>
-                      </div>
-                      <p className="item-desc text-neutral-400">
-                        2 Menù Adulti + 1 Menù bambini.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
               {/* CATEGORIA 4: LE BIRRE (SPINA & ARTIGIANALI) */}
                <div className="menu-category" id="menu-birre">
                  <h2 className="category-title border-b-2">Le Birre (Spina & Artigianali)</h2>
@@ -1407,7 +1356,7 @@ export default function App() {
                     <div className="item-info">
                       <div className="item-header">
                         <span className="item-name text-white">Cocktail Classico</span>
-                        <span className="item-price">€ 6.00</span>
+                        <span className="item-price">€ 7.00</span>
                       </div>
                       <p className="item-desc text-neutral-400">
                         I grandi classici della miscelazione: Negroni, Gin Tonic, Gin Lemon, Mojito, Caipirinha e Cuba Libre.
@@ -1418,7 +1367,7 @@ export default function App() {
                     <div className="item-info">
                       <div className="item-header">
                         <span className="item-name text-white">Aperol Spritz / Campari Spritz</span>
-                        <span className="item-price">€ 5.00</span>
+                        <span className="item-price">€ 6.00</span>
                       </div>
                       <p className="item-desc text-neutral-400">
                         L'aperitivo per eccellenza: Prosecco DOC, Aperol o Campari, soda ed una fetta d'arancia fresca.
@@ -1429,7 +1378,7 @@ export default function App() {
                     <div className="item-info">
                       <div className="item-header">
                         <span className="item-name text-white">Cocktail Premium</span>
-                        <span className="item-price">€ 8.00</span>
+                        <span className="item-price">€ 9.00 / € 10.00</span>
                       </div>
                       <p className="item-desc text-neutral-400">
                         Preparazioni ricercate realizzate con gin, vodka o rum di fascia premium e botaniche selezionate.
@@ -1447,7 +1396,7 @@ export default function App() {
                     <div className="item-info">
                       <div className="item-header">
                         <span className="item-name text-white">Calice di Vino</span>
-                        <span className="item-price">€ 4.00</span>
+                        <span className="item-price">€ 5.00</span>
                       </div>
                       <p className="item-desc text-neutral-400">
                         Una selezione di vini rossi, bianchi o rosati pugliesi serviti al calice.
@@ -1524,7 +1473,7 @@ export default function App() {
                     <div className="item-info">
                       <div className="item-header">
                         <span className="item-name text-white">Bicchiere di Prosecco</span>
-                        <span className="item-price">€ 3.00</span>
+                        <span className="item-price">€ 5.00</span>
                       </div>
                       <p className="item-desc text-neutral-400">
                         Un calice fresco di bollicine spumeggianti per brindare.
@@ -1535,7 +1484,7 @@ export default function App() {
                     <div className="item-info">
                       <div className="item-header">
                         <span className="item-name text-white">Bottiglia di Prosecco</span>
-                        <span className="item-price">€ 16.00</span>
+                        <span className="item-price">€ 20.00</span>
                       </div>
                       <p className="item-desc text-neutral-400">
                         Prosecco DOC spumante extra dry, ideale per aperitivi, festeggiamenti o piatti leggeri.
@@ -1624,6 +1573,18 @@ export default function App() {
                       <p className="item-desc text-neutral-400">
                         Bibita analcolica frizzante con vero succo d'arancia italiana.
                       </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* INFO COPERTO */}
+              <div className="menu-category" style={{ marginBottom: "20px" }}>
+                <div className="menu-item" style={{ maxWidth: "480px", margin: "0 auto" }}>
+                  <div className="item-info">
+                    <div className="item-header">
+                      <span className="item-name text-white">Coperto (a persona)</span>
+                      <span className="item-price">€ 2.00</span>
                     </div>
                   </div>
                 </div>
@@ -1869,9 +1830,9 @@ export default function App() {
             <div className="footer-col">
               <h4>Orari di Apertura</h4>
               <ul className="footer-links" style={{ fontSize: "0.95rem" }}>
-                <li className="text-neutral-200">Martedì – Domenica</li>
+                <li className="text-neutral-200">Martedì, Venerdì, Sabato e Domenica</li>
                 <li style={{ fontSize: "1.1rem", color: "var(--color-text)", marginBottom: "8px" }}>19:30 – 02:00</li>
-                <li className="text-neutral-200">Lunedì</li>
+                <li className="text-neutral-200">Lunedì, Mercoledì e Giovedì</li>
                 <li style={{ fontSize: "1.1rem", color: "var(--color-accent)", fontWeight: "bold" }}>CHIUSO</li>
               </ul>
             </div>
