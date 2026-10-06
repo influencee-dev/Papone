@@ -14,11 +14,46 @@ interface Booking {
   createdAt: string;
 }
 
+function getInitialTab(): "home" | "menu" | "privacy" | "cookie" {
+  if (typeof window === "undefined") return "home";
+  const hash = window.location.hash.toLowerCase();
+  const path = window.location.pathname.toLowerCase();
+  const params = new URLSearchParams(window.location.search);
+  const tabParam = params.get("tab")?.toLowerCase();
+
+  if (
+    hash === "#menu" ||
+    hash.startsWith("#menu-") ||
+    path === "/menu" ||
+    path === "/menu/" ||
+    tabParam === "menu" ||
+    params.has("menu")
+  ) {
+    return "menu";
+  }
+  if (hash === "#privacy" || path === "/privacy") return "privacy";
+  if (hash === "#cookie" || path === "/cookie") return "cookie";
+  return "home";
+}
+
 export default function App() {
-  const [activeTab, setActiveTab] = useState<"home" | "menu" | "privacy" | "cookie">("home");
+  const [activeTab, setActiveTab] = useState<"home" | "menu" | "privacy" | "cookie">(getInitialTab);
   const [showAdmin, setShowAdmin] = useState(false);
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  useEffect(() => {
+    const syncTabFromUrl = () => {
+      const nextTab = getInitialTab();
+      setActiveTab(nextTab);
+    };
+    window.addEventListener("hashchange", syncTabFromUrl);
+    window.addEventListener("popstate", syncTabFromUrl);
+    return () => {
+      window.removeEventListener("hashchange", syncTabFromUrl);
+      window.removeEventListener("popstate", syncTabFromUrl);
+    };
+  }, []);
   
   // Cookie Consent States
   const [showCookieModal, setShowCookieModal] = useState(false);
