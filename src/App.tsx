@@ -1253,7 +1253,235 @@ export default function App() {
                 </div>
               </div>
 
-              {/* CATEGORIA 4: LE BIRRE (SPINA & ARTIGIANALI) */}
+              {/* CATEGORIA 4: LE NOSTRE PIZZE */}
+              <div className="menu-category" id="menu-pizze">
+                <h2 className="category-title border-b-2">Le Nostre Pizze</h2>
+
+                {/* BLOCCO 1: LISTA PIZZE A SINISTRA + PIZZA 1 GRANDE A DESTRA */}
+                <div className="grid grid-cols-1 md:grid-cols-12 gap-8 lg:gap-12 items-center mb-14">
+                  <div className="md:col-span-7 order-2 md:order-1 space-y-4">
+                    <div className="menu-item">
+                      <div className="item-info" style={{ paddingRight: 0 }}>
+                        <div className="flex justify-between items-baseline gap-4 mb-1">
+                          <span className="item-name text-white">Marinara</span>
+                          <span className="item-price">€ 6.00</span>
+                        </div>
+                        <p className="item-desc text-neutral-400">
+                          Pomodoro Rosso Gargano, origano e aglio.
+                        </p>
+                      </div>
+                    </div>
+                    <div className="menu-item">
+                      <div className="item-info" style={{ paddingRight: 0 }}>
+                        <div className="flex justify-between items-baseline gap-4 mb-1">
+                          <span className="item-name text-white">Margherita</span>
+                          <span className="item-price">€ 7.00</span>
+                        </div>
+                        <p className="item-desc text-neutral-400">
+                          Pomodoro Rosso Gargano e fiordilatte.
+                        </p>
+                      </div>
+                    </div>
+                    <div className="menu-item">
+                      <div className="item-info" style={{ paddingRight: 0 }}>
+                        <div className="flex justify-between items-baseline gap-4 mb-1">
+                          <span className="item-name text-white">Bufala</span>
+                          <span className="item-price">€ 9.50</span>
+                        </div>
+                        <p className="item-desc text-neutral-400">
+                          Pomodoro Rosso Gargano e bufala campana DOC.
+                        </p>
+                      </div>
+                    </div>
+                    <div className="menu-item">
+                      <div className="item-info" style={{ paddingRight: 0 }}>
+                        <div className="flex justify-between items-baseline gap-4 mb-1">
+                          <span className="item-name text-white">Diavola</span>
+                          <span className="item-price">€ 8.50</span>
+                        </div>
+                        <p className="item-desc text-neutral-400">
+                          Pomodoro Rosso Gargano, fiordilatte e piccante.
+                        </p>
+                      </div>
+                    </div>
+                    <div className="menu-item">
+                      <div className="item-info" style={{ paddingRight: 0 }}>
+                        <div className="flex justify-between items-baseline gap-4 mb-1">
+                          <span className="item-name text-white">Provola e pepe</span>
+                          <span className="item-price">€ 8.00</span>
+                        </div>
+                        <p className="item-desc text-neutral-400">
+                          Pomodoro Rosso Gargano, provola affumicata d&apos;Agerola e pepe.
+                        </p>
+                      </div>
+                    </div>
+                    <div className="menu-item">
+                      <div className="item-info" style={{ paddingRight: 0 }}>
+                        <div className="flex justify-between items-baseline gap-4 mb-1">
+                          <span className="item-name text-white">Capricciosa</span>
+                          <span className="item-price">€ 9.00</span>
+                        </div>
+                        <p className="item-desc text-neutral-400">
+                          Pomodoro Rosso Gargano, fiordilatte, cotto, funghi, olive nere e carciofi.
+                        </p>
+                      </div>
+                    </div>
+                    <div className="menu-item">
+                      <div className="item-info" style={{ paddingRight: 0 }}>
+                        <div className="flex justify-between items-baseline gap-4 mb-1">
+                          <span className="item-name text-white">Parma</span>
+                          <span className="item-price">€ 10.00</span>
+                        </div>
+                        <p className="item-desc text-neutral-400">
+                          Pomodoro Rosso Gargano, fiordilatte, crudo di Parma e grana DOP.
+                        </p>
+                      </div>
+                    </div>
+                    <div className="menu-item">
+                      <div className="item-info" style={{ paddingRight: 0 }}>
+                        <div className="flex justify-between items-baseline gap-4 mb-1">
+                          <span className="item-name text-white">Cotto e funghi</span>
+                          <span className="item-price">€ 9.00</span>
+                        </div>
+                        <p className="item-desc text-neutral-400">
+                          Pomodoro Rosso Gargano, fiordilatte, cotto e funghi.
+                        </p>
+                      </div>
+                    </div>
+                    <div className="menu-item">
+                      <div className="item-info" style={{ paddingRight: 0 }}>
+                        <div className="flex justify-between items-baseline gap-4 mb-1">
+                          <span className="item-name text-white">Viennese</span>
+                          <span className="item-price">€ 8.50</span>
+                        </div>
+                        <p className="item-desc text-neutral-400">
+                          Fiordilatte, würstel e patatine.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="md:col-span-5 order-1 md:order-2 flex justify-center md:justify-end">
+                    <div className="w-64 h-64 sm:w-72 sm:h-72 lg:w-96 lg:h-96 rounded-full overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.85)] border border-neutral-800">
+                      <img
+                        src="/pizza1.png"
+                        alt="Pizza artigianale Papone"
+                        className="w-full h-full object-cover scale-105"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* BLOCCO 2: PIZZA 2 A SINISTRA + LISTA PIZZE A DESTRA */}
+                <div className="grid grid-cols-1 md:grid-cols-12 gap-8 lg:gap-12 items-center">
+                  <div className="md:col-span-5 order-2 md:order-1 flex justify-center md:justify-start">
+                    <div className="w-64 h-64 sm:w-72 sm:h-72 lg:w-96 lg:h-96 rounded-full overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.85)] border border-neutral-800">
+                      <img
+                        src="/pizza2.png"
+                        alt="Pizza speciale Papone"
+                        className="w-full h-full object-cover scale-105"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="md:col-span-7 order-1 md:order-2 space-y-4">
+                    <div className="menu-item">
+                      <div className="item-info" style={{ paddingRight: 0 }}>
+                        <div className="flex justify-between items-baseline gap-4 mb-1">
+                          <span className="item-name text-white">Ortolana</span>
+                          <span className="item-price">€ 10.00</span>
+                        </div>
+                        <p className="item-desc text-neutral-400">
+                          Fiordilatte, melanzane, zucchine e peperoni.
+                        </p>
+                      </div>
+                    </div>
+                    <div className="menu-item">
+                      <div className="item-info" style={{ paddingRight: 0 }}>
+                        <div className="flex justify-between items-baseline gap-4 mb-1">
+                          <span className="item-name text-white">5 Formaggi</span>
+                          <span className="item-price">€ 10.00</span>
+                        </div>
+                        <p className="item-desc text-neutral-400">
+                          Fiordilatte, cacio, gorgonzola al cucchiaio, provola e fonduta di parmigiano.
+                        </p>
+                      </div>
+                    </div>
+                    <div className="menu-item">
+                      <div className="item-info" style={{ paddingRight: 0 }}>
+                        <div className="flex justify-between items-baseline gap-4 mb-1">
+                          <span className="item-name text-white">Zuccona</span>
+                          <span className="item-price">€ 13.00</span>
+                        </div>
+                        <p className="item-desc text-neutral-400">
+                          Crema di zucca, gorgonzola al cucchiaio, fiordilatte e capocollo.
+                        </p>
+                      </div>
+                    </div>
+                    <div className="menu-item">
+                      <div className="item-info" style={{ paddingRight: 0 }}>
+                        <div className="flex justify-between items-baseline gap-4 mb-1">
+                          <span className="item-name text-white">Napulè</span>
+                          <span className="item-price">€ 12.00</span>
+                        </div>
+                        <p className="item-desc text-neutral-400">
+                          Provola affumicata, crema di friarielli e salsiccia di Norcia.
+                        </p>
+                      </div>
+                    </div>
+                    <div className="menu-item">
+                      <div className="item-info" style={{ paddingRight: 0 }}>
+                        <div className="flex justify-between items-baseline gap-4 mb-1">
+                          <span className="item-name text-white">Datterina</span>
+                          <span className="item-price">€ 14.00</span>
+                        </div>
+                        <p className="item-desc text-neutral-400">
+                          Datterino giallo, provola affumicata, pancetta al pepe e mandorle tostate.
+                        </p>
+                      </div>
+                    </div>
+                    <div className="menu-item">
+                      <div className="item-info" style={{ paddingRight: 0 }}>
+                        <div className="flex justify-between items-baseline gap-4 mb-1">
+                          <span className="item-name text-white">Norcina</span>
+                          <span className="item-price">€ 12.00</span>
+                        </div>
+                        <p className="item-desc text-neutral-400">
+                          Provola affumicata, patate al forno, salsiccia e grana.
+                        </p>
+                      </div>
+                    </div>
+                    <div className="menu-item">
+                      <div className="item-info" style={{ paddingRight: 0 }}>
+                        <div className="flex justify-between items-baseline gap-4 mb-1">
+                          <span className="item-name text-white">Za fò</span>
+                          <span className="item-price">€ 10.00</span>
+                        </div>
+                        <p className="item-desc text-neutral-400">
+                          Pomodoro Rosso Gargano, fiordilatte, spianata piccante e gorgonzola al cucchiaio.
+                        </p>
+                      </div>
+                    </div>
+                    <div className="menu-item">
+                      <div className="item-info" style={{ paddingRight: 0 }}>
+                        <div className="flex justify-between items-baseline gap-4 mb-1">
+                          <span className="item-name text-white">Zozza</span>
+                          <span className="item-price">€ 12.00</span>
+                        </div>
+                        <p className="item-desc text-neutral-400">
+                          Fiordilatte, mortadella, stracciatella e pistacchio.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-8 text-right text-sm text-[var(--color-accent)] font-bold italic">
+                  * Basilico e Olio EVO su tutte alla fine
+                </div>
+              </div>
+
+              {/* CATEGORIA 5: LE BIRRE (SPINA & ARTIGIANALI) */}
                <div className="menu-category" id="menu-birre">
                  <h2 className="category-title border-b-2">Le Birre (Spina & Artigianali)</h2>
                  <div className="menu-grid">
