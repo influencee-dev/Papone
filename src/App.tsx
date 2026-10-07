@@ -1329,11 +1329,11 @@ export default function App() {
                     <div className="menu-item">
                       <div className="item-info" style={{ paddingRight: 0 }}>
                         <div className="flex justify-between items-baseline gap-4 mb-1">
-                          <span className="item-name text-white">Parma</span>
-                          <span className="item-price">€ 10.00</span>
+                          <span className="item-name text-white">Parma D.O.C</span>
+                          <span className="item-price">€ 12.00</span>
                         </div>
                         <p className="item-desc text-neutral-400">
-                          Pomodoro Rosso Gargano, fiordilatte, crudo di Parma e grana DOP.
+                          Pomodoro Rosso Gargano, bufala campana DOC, prosciutto crudo di Parma e grana.
                         </p>
                       </div>
                     </div>
