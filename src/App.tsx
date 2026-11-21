@@ -915,14 +915,6 @@ export default function App() {
                   <div className="menu-item">
                     <div className="item-info">
                       <div className="item-header">
-                        <span className="item-name text-white">Parmigiana</span>
-                        <span className="item-price">€ 7.00</span>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="menu-item">
-                    <div className="item-info">
-                      <div className="item-header">
                         <span className="item-name text-white">Fiori di zucca (4 pezzi)</span>
                         <span className="item-price">€ 6.00</span>
                       </div>
@@ -940,14 +932,6 @@ export default function App() {
                     <div className="item-info">
                       <div className="item-header">
                         <span className="item-name text-white">Triangolo speck e patate</span>
-                        <span className="item-price">€ 6.00</span>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="menu-item">
-                    <div className="item-info">
-                      <div className="item-header">
-                        <span className="item-name text-white">Nuggets di pulled pork (5 pezzi)</span>
                         <span className="item-price">€ 6.00</span>
                       </div>
                     </div>
@@ -1005,30 +989,6 @@ export default function App() {
                       <div className="item-header">
                         <span className="item-name text-white">Caprese</span>
                         <span className="item-price">€ 7.00</span>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="menu-item">
-                    <div className="item-info">
-                      <div className="item-header">
-                        <span className="item-name text-white">Gateau di patate</span>
-                        <span className="item-price">€ 5.00</span>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="menu-item">
-                    <div className="item-info">
-                      <div className="item-header">
-                        <span className="item-name text-white">Nodini di latte vaccino</span>
-                        <span className="item-price">€ 0.80 / pezzo</span>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="menu-item">
-                    <div className="item-info">
-                      <div className="item-header">
-                        <span className="item-name text-white">Frittata</span>
-                        <span className="item-price">€ 4.00</span>
                       </div>
                     </div>
                   </div>
@@ -1112,7 +1072,7 @@ export default function App() {
                   <div className="menu-item">
                     <div className="item-info">
                       <div className="item-header">
-                        <span className="item-name text-white">Torcinelli (6 pezzi)</span>
+                        <span className="item-name text-white">Torcinelli (5 pezzi)</span>
                         <span className="item-price">€ 8.00</span>
                       </div>
                     </div>
@@ -1120,7 +1080,7 @@ export default function App() {
                   <div className="menu-item">
                     <div className="item-info">
                       <div className="item-header">
-                        <span className="item-name text-white">Paccanelli (6 pezzi)</span>
+                        <span className="item-name text-white">Paccanelli (5 pezzi)</span>
                         <span className="item-price">€ 8.00</span>
                       </div>
                     </div>
@@ -1155,7 +1115,7 @@ export default function App() {
                     <div className="item-info">
                       <div className="item-header">
                         <span className="item-name text-white">Cowboy</span>
-                        <span className="item-price">€ 9.00</span>
+                        <span className="item-price">€ 9.80</span>
                       </div>
                       <p className="item-desc text-neutral-400">
                         Paccanelli, mozzarella, insalata, carciofi, tabasco e salsa rosa.
@@ -1166,7 +1126,7 @@ export default function App() {
                     <div className="item-info">
                       <div className="item-header">
                         <span className="item-name text-white">Bandito</span>
-                        <span className="item-price">€ 9.00</span>
+                        <span className="item-price">€ 9.80</span>
                       </div>
                       <p className="item-desc text-neutral-400">
                         Hamburger di vitello, funghi, insalata, bacon, patatine fritte, salsa cheddar e salsa remoulade.
@@ -1177,7 +1137,7 @@ export default function App() {
                     <div className="item-info">
                       <div className="item-header">
                         <span className="item-name text-white">Sceriffo</span>
-                        <span className="item-price">€ 9.00</span>
+                        <span className="item-price">€ 9.80</span>
                       </div>
                       <p className="item-desc text-neutral-400">
                         Salsiccia, patate al forno, mozzarella, melanzane sott'olio, maionese e salsa BBQ.
@@ -1188,7 +1148,7 @@ export default function App() {
                     <div className="item-info">
                       <div className="item-header">
                         <span className="item-name text-white">Fuorilegge</span>
-                        <span className="item-price">€ 9.00</span>
+                        <span className="item-price">€ 9.80</span>
                       </div>
                       <p className="item-desc text-neutral-400">
                         Parmigiana, ventricina e caciocavallo fuso.
@@ -1199,7 +1159,7 @@ export default function App() {
                     <div className="item-info">
                       <div className="item-header">
                         <span className="item-name text-white">Pistolero</span>
-                        <span className="item-price">€ 9.00</span>
+                        <span className="item-price">€ 9.80</span>
                       </div>
                       <p className="item-desc text-neutral-400">
                         Cotoletta, insalata e maionese.
