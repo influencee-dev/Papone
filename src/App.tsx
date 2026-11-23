@@ -1,4 +1,12 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
+import {
+  CookieConsentState,
+  DEFAULT_CONSENT,
+  loadStoredConsent,
+  persistConsentChoice,
+  syncThirdPartyScripts,
+  updateGoogleConsentMode,
+} from "./utils/consent";
 
 interface Booking {
   id: string;
@@ -10,6 +18,8 @@ interface Booking {
   ora?: string;
   persone: string;
   note: string;
+  consensoAllergie?: boolean;
+  consensoPromozioni?: boolean;
   status: string;
   createdAt: string;
 }
@@ -58,43 +68,36 @@ export default function App() {
   // Cookie Consent States
   const [showCookieModal, setShowCookieModal] = useState(false);
   const [showCookieBanner, setShowCookieBanner] = useState(false);
-  const [cookieConsent, setCookieConsent] = useState<{
-    necessari: boolean;
-    statistici: boolean;
-    marketing: boolean;
-    sceltaCompletata: boolean;
-  }>({
-    necessari: true,
-    statistici: false,
-    marketing: false,
-    sceltaCompletata: false
-  });
+  const [mapConsented, setMapConsented] = useState(false);
+  const [cookieConsent, setCookieConsent] = useState<CookieConsentState>(DEFAULT_CONSENT);
 
   const [tempStatistici, setTempStatistici] = useState(false);
   const [tempMarketing, setTempMarketing] = useState(false);
 
   useEffect(() => {
-    // Caricamento preferenze cookie salvate
-    const savedConsent = localStorage.getItem("papone_cookie_consent");
-    if (savedConsent) {
-      const parsed = JSON.parse(savedConsent);
-      setCookieConsent(parsed);
-      setTempStatistici(parsed.statistici);
-      setTempMarketing(parsed.marketing);
+    // Caricamento preferenze cookie salvate (valide 6 mesi)
+    const stored = loadStoredConsent();
+    if (stored) {
+      setCookieConsent(stored);
+      setTempStatistici(stored.statistici);
+      setTempMarketing(stored.marketing);
+      updateGoogleConsentMode(stored);
+      syncThirdPartyScripts(stored);
     } else {
       setShowCookieBanner(true);
     }
   }, []);
 
-  const saveCookiePreferences = (necessari: boolean, statistici: boolean, marketing: boolean) => {
-    const newConsent = {
-      necessari,
-      statistici,
-      marketing,
-      sceltaCompletata: true
-    };
-    localStorage.setItem("papone_cookie_consent", JSON.stringify(newConsent));
+  const saveCookiePreferences = (_necessari: boolean, statistici: boolean, marketing: boolean) => {
+    const newConsent = persistConsentChoice(statistici, marketing);
     setCookieConsent(newConsent);
+    setTempStatistici(statistici);
+    setTempMarketing(marketing);
+    if (!marketing) {
+      setMapConsented(false);
+    }
+    updateGoogleConsentMode(newConsent);
+    syncThirdPartyScripts(newConsent);
     setShowCookieBanner(false);
     setShowCookieModal(false);
   };
@@ -116,6 +119,8 @@ export default function App() {
     ora: "19:30",
     persone: "2",
     note: "",
+    consensoAllergie: false,
+    consensoPromozioni: false,
   });
   const [formLoading, setFormLoading] = useState(false);
   const [formSuccessMessage, setFormSuccessMessage] = useState("");
@@ -265,6 +270,8 @@ export default function App() {
       ora: "19:30",
       persone: "2",
       note: "",
+      consensoAllergie: false,
+      consensoPromozioni: false,
     });
   };
 
@@ -780,6 +787,46 @@ export default function App() {
                             onChange={(e) => setFormData({ ...formData, note: e.target.value })}
                           ></textarea>
                         </div>
+
+                        {/* Caselle facoltative (mai preselezionate e mai obbligatorie) */}
+                        <div className="form-group full space-y-3 pt-1">
+                          <label
+                            htmlFor="consenso-allergie"
+                            className="flex items-start gap-3 cursor-pointer"
+                            style={{ fontFamily: "var(--font-body)", textTransform: "none", letterSpacing: "normal", color: "#e5e5e5", fontSize: "0.875rem", lineHeight: "1.4" }}
+                          >
+                            <input
+                              type="checkbox"
+                              id="consenso-allergie"
+                              checked={formData.consensoAllergie}
+                              onChange={(e) => setFormData({ ...formData, consensoAllergie: e.target.checked })}
+                              className="mt-1 h-4 w-4 shrink-0 accent-amber-500 cursor-pointer"
+                              style={{ padding: 0 }}
+                            />
+                            <span>
+                              Acconsento all&apos;uso delle informazioni su allergie o intolleranze che ho indicato nelle note, solo per preparare in sicurezza la mia serata.
+                            </span>
+                          </label>
+
+                          <label
+                            htmlFor="consenso-promozioni"
+                            className="flex items-start gap-3 cursor-pointer"
+                            style={{ fontFamily: "var(--font-body)", textTransform: "none", letterSpacing: "normal", color: "#e5e5e5", fontSize: "0.875rem", lineHeight: "1.4" }}
+                          >
+                            <input
+                              type="checkbox"
+                              id="consenso-promozioni"
+                              checked={formData.consensoPromozioni}
+                              onChange={(e) => setFormData({ ...formData, consensoPromozioni: e.target.checked })}
+                              className="mt-1 h-4 w-4 shrink-0 accent-amber-500 cursor-pointer"
+                              style={{ padding: 0 }}
+                            />
+                            <span>
+                              Voglio ricevere via WhatsApp, SMS o email novità, serate a tema ed eventi di Papone Dal 1956. Posso disiscrivermi quando voglio.
+                            </span>
+                          </label>
+                        </div>
+
                         <div className="form-group full">
                           <button 
                             type="submit" 
@@ -799,6 +846,21 @@ export default function App() {
                               </>
                             )}
                           </button>
+                          <p className="text-xs text-neutral-400 leading-relaxed mt-3 text-center">
+                            Inviando la prenotazione dichiari di aver letto la{" "}
+                            <a
+                              href="#privacy"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                setActiveTab("privacy");
+                                window.scrollTo({ top: 0, behavior: "smooth" });
+                              }}
+                              className="text-amber-400 underline hover:text-amber-300 transition"
+                            >
+                              Privacy Policy
+                            </a>
+                            . Useremo i tuoi dati per gestire la prenotazione e li registreremo nel nostro gestionale.
+                          </p>
                         </div>
                       </div>
                     </form>
@@ -852,12 +914,30 @@ export default function App() {
                 </div>
                 
                 <div className="maps-rectangle">
-                  <iframe 
-                    src="https://maps.google.com/maps?q=Via%20Trinitapoli%2024,%2071121%20Foggia%20FG,%20Italy&t=&z=15&ie=UTF8&iwloc=&output=embed" 
-                    allowFullScreen={true} 
-                    loading="lazy" 
-                    referrerPolicy="no-referrer-when-downgrade"
-                  ></iframe>
+                  {cookieConsent.marketing || mapConsented ? (
+                    <iframe 
+                      src="https://maps.google.com/maps?q=Via%20Trinitapoli%2024,%2071121%20Foggia%20FG,%20Italy&t=&z=15&ie=UTF8&iwloc=&output=embed" 
+                      allowFullScreen={true} 
+                      loading="lazy" 
+                      referrerPolicy="no-referrer-when-downgrade"
+                    ></iframe>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() => setMapConsented(true)}
+                      className="w-full h-full bg-neutral-950/90 hover:bg-neutral-900 text-white flex flex-col items-center justify-center p-6 text-center cursor-pointer transition gap-4"
+                    >
+                      <div className="w-16 h-16 rounded-full bg-amber-500/15 border border-amber-500/40 flex items-center justify-center text-amber-400 text-2xl">
+                        <i className="fas fa-map-marked-alt"></i>
+                      </div>
+                      <span className="font-bold text-lg text-amber-400 tracking-wide">
+                        Clicca per caricare la mappa di Google
+                      </span>
+                      <span className="text-xs text-neutral-400 max-w-xs leading-relaxed">
+                        La mappa di Google Maps viene caricata solo dopo il tuo consenso perché può impostare cookie di Google.
+                      </span>
+                    </button>
+                  )}
                 </div>
               </div>
             </div>
@@ -1799,81 +1879,223 @@ export default function App() {
         <section className="section-padding bg-neutral-900 text-white min-h-screen pt-32 pb-24">
           <div className="container max-w-4xl mx-auto px-4">
             <div className="mb-12 text-center md:text-left">
-              <span className="section-label bebas text-amber-400 tracking-wider">INFORMATIVA SULLA PRIVACY</span>
-              <h1 className="text-4xl font-extrabold mt-2 text-white font-sans tracking-tight">Privacy Policy</h1>
-              <p className="text-sm text-neutral-400 font-mono mt-2">Ultimo aggiornamento: 20 maggio 2026</p>
+              <h1 className="text-4xl font-extrabold text-white font-sans tracking-tight">PRIVACY POLICY</h1>
+              <p className="text-sm text-neutral-400 font-mono mt-2">
+                Informativa sul trattamento dei dati personali – Ultimo aggiornamento: 23 novembre 2026
+              </p>
             </div>
             
             <div className="prose prose-invert max-w-none text-neutral-300 space-y-8 font-sans leading-relaxed">
+              <p>
+                Questa pagina spiega in modo semplice come Papone Dal 1956 raccoglie e usa i dati personali di chi visita questo sito e di chi prenota un tavolo o ci contatta tramite il sito, WhatsApp, telefono o i nostri social. È resa ai sensi degli articoli 13 e 14 del Regolamento (UE) 2016/679 (&quot;GDPR&quot;) e del D.Lgs. 196/2003 (&quot;Codice Privacy&quot;).
+              </p>
+
               <div>
-                <h3 className="text-xl font-bold font-mono text-amber-400 mb-3 uppercase tracking-wider">1. Titolare del Trattamento</h3>
+                <h2 className="text-xl font-bold font-mono text-amber-400 mb-3">1. Chi tratta i tuoi dati</h2>
                 <p>
-                  Il titolare del trattamento dei dati personali raccolti attraverso questo sito internet è la ditta titolare del marchio 
-                  <strong> "Papone Dal 1956"</strong> situato in <em>Via Trinitapoli 24, 71121 Foggia FG, Italia</em>. Per qualsiasi richiesta o informazione in merito alla gestione dei tuoi dati, è possibile scrivere all'indirizzo email: <a href="mailto:alessandro_doc@live.it" className="text-amber-400 underline hover:text-amber-500 transition">alessandro_doc@live.it</a>.
+                  Titolare del trattamento è Radici S.r.l., titolare del marchio &quot;Papone Dal 1956&quot;, P.IVA 04585110713, con locale in Via Trinitapoli 24, 71121 Foggia (FG). Email papone2018@gmail.com – PEC radicisrl26@pec.it – Telefono +39 345 231 1789.
+                </p>
+                <p className="mt-3">
+                  Per la gestione tecnica del sito, del gestionale clienti Gestiamo, dell&apos;invio di email e messaggi e delle campagne pubblicitarie online ci avvaliamo di Partidea S.r.l. (brand Socialee e Gestiamo), P.IVA 04405500408, Via Augusto Righi 15 – 47924 Rimini (RN), PEC amministrazione@pec.partidea.it, email info@socialee.it. Partidea S.r.l. è nominata Responsabile del trattamento ai sensi dell&apos;art. 28 GDPR con un accordo scritto: tratta i dati solo per nostro conto e secondo le nostre istruzioni, e si avvale a sua volta dei fornitori indicati in questa informativa.
                 </p>
               </div>
 
               <div>
-                <h3 className="text-xl font-bold font-mono text-amber-400 mb-3 uppercase tracking-wider">2. Tipologia di Dati Raccolti</h3>
-                <p>
-                  Quando compili il nostro modulo di prenotazione o richiedi informazioni sul sito, raccogliamo le seguenti informazioni essenziali fornite volontariamente:
-                </p>
-                <ul className="list-disc list-inside mt-3 space-y-2 text-neutral-300 pl-4">
-                  <li><strong>Nome e Cognome:</strong> Necessari per identificare la prenotazione del tavolo.</li>
-                  <li><strong>Numero di Telefono:</strong> Utilizzato per confermare o comunicare variazioni sulla prenotazione tramite contatto telefonico o WhatsApp.</li>
-                  <li><strong>Indirizzo Email:</strong> Usato facoltativamente per l'invio della notifica di riepilogo e ai fini della gestione dei contatti.</li>
-                  <li><strong>Numero di Coperti e Note speciali:</strong> Necessari per organizzare la sala in base alle preferenze o alle intolleranze alimentari segnalate.</li>
+                <h2 className="text-xl font-bold font-mono text-amber-400 mb-3">2. Quali dati raccogliamo</h2>
+                <ul className="list-disc list-inside space-y-2 text-neutral-300 pl-2">
+                  <li>Dati di navigazione: indirizzo IP, browser, dispositivo, pagine visitate, data e ora, raccolti automaticamente dai sistemi che fanno funzionare il sito.</li>
+                  <li>Prenotazione dei tavoli: nome e cognome, numero di telefono, email (facoltativa), data, orario e numero di persone, ed eventuali note che decidi di aggiungere (ad esempio una ricorrenza o una preferenza sul tavolo).</li>
+                  <li>Messaggi: quanto ci scrivi via WhatsApp, telefono, email o messaggi sui social.</li>
+                  <li>Dati raccolti con cookie e strumenti di tracciamento: identificativi online e interazioni con il sito, con le nostre email e con i nostri annunci, solo se lo consenti tramite il banner (tranne i cookie tecnici).</li>
+                  <li>Le tue scelte sul consenso: quando e a cosa hai detto sì o no.</li>
                 </ul>
               </div>
 
               <div>
-                <h3 className="text-xl font-bold font-mono text-amber-400 mb-3 uppercase tracking-wider">3. Finalità e Base Giuridica del Trattamento</h3>
+                <h2 className="text-xl font-bold font-mono text-amber-400 mb-3">3. Perché usiamo i dati e su quale base</h2>
+                <div className="overflow-x-auto rounded-xl border border-neutral-800">
+                  <table className="w-full text-left border-collapse text-sm">
+                    <thead>
+                      <tr className="bg-neutral-950 text-amber-400 border-b border-neutral-800">
+                        <th className="p-3 font-bold">Finalità</th>
+                        <th className="p-3 font-bold">Base giuridica</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-neutral-800 bg-neutral-950/40">
+                      <tr>
+                        <td className="p-3">Gestire la prenotazione del tavolo, confermarla o comunicarti eventuali variazioni</td>
+                        <td className="p-3">Esecuzione di un contratto o di misure precontrattuali (art. 6.1.b GDPR)</td>
+                      </tr>
+                      <tr>
+                        <td className="p-3">Registrare i dati nel gestionale Gestiamo per organizzare il servizio e ricordare lo storico del cliente</td>
+                        <td className="p-3">Contratto (art. 6.1.b) e nostro legittimo interesse a gestire la clientela in modo ordinato (art. 6.1.f)</td>
+                      </tr>
+                      <tr>
+                        <td className="p-3">Inviare il riepilogo della prenotazione e i promemoria via email, SMS o WhatsApp</td>
+                        <td className="p-3">Contratto (art. 6.1.b)</td>
+                      </tr>
+                      <tr>
+                        <td className="p-3">Gestire allergie e intolleranze che ci comunichi</td>
+                        <td className="p-3">Consenso esplicito (art. 9.2.a GDPR)</td>
+                      </tr>
+                      <tr>
+                        <td className="p-3">Inviare newsletter, offerte, serate a tema e inviti a eventi</td>
+                        <td className="p-3">Consenso (art. 6.1.a), revocabile in ogni momento</td>
+                      </tr>
+                      <tr>
+                        <td className="p-3">Misurare l&apos;uso del sito con statistiche (Google Analytics)</td>
+                        <td className="p-3">Consenso (art. 6.1.a GDPR e art. 122 Codice Privacy)</td>
+                      </tr>
+                      <tr>
+                        <td className="p-3">Misurare le campagne e mostrare annunci personalizzati su Google, Facebook e Instagram</td>
+                        <td className="p-3">Consenso (art. 6.1.a GDPR e art. 122 Codice Privacy)</td>
+                      </tr>
+                      <tr>
+                        <td className="p-3">Rispettare obblighi di legge (fiscali, contabili)</td>
+                        <td className="p-3">Obbligo legale (art. 6.1.c)</td>
+                      </tr>
+                      <tr>
+                        <td className="p-3">Proteggere il sito da abusi e spam e difendere i nostri diritti</td>
+                        <td className="p-3">Legittimo interesse (art. 6.1.f)</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <div>
+                <h2 className="text-xl font-bold font-mono text-amber-400 mb-3">4. Il gestionale Gestiamo</h2>
                 <p>
-                  I dati raccolti vengono trattati per le seguenti finalità:
+                  I dati di clienti e prenotazioni sono registrati in Gestiamo, il gestionale privato (CRM) che Partidea S.r.l. fornisce e gestisce per nostro conto. Lo usiamo per:
                 </p>
-                <ul className="list-disc list-inside mt-3 space-y-2 text-neutral-300 pl-4">
-                  <li>Adempiere alle richieste di prenotazione inoltrate dall'utente (gestione del tavolo, conferma e recapito).</li>
-                  <li>Inviare comunicazioni di conferma tramite email e integrare il contatto con i nostri servizi interni ed SMS/notifiche automatiche di conferma della prenotazione tramite Brevo.</li>
-                  <li>Fornire il link rapido per l'inoltro diretto guidato via WhatsApp al numero dell'attività.</li>
+                <ul className="list-disc list-inside mt-3 space-y-2 text-neutral-300 pl-2">
+                  <li>conservare nome e recapiti dei clienti;</li>
+                  <li>organizzare le prenotazioni dei tavoli, anche quelle arrivate via WhatsApp o telefono, e ricordarne lo storico;</li>
+                  <li>registrare consensi e preferenze di contatto, così da scrivere solo a chi lo ha accettato;</li>
+                  <li>inviare a Brevo i contatti necessari per il riepilogo delle prenotazioni e, solo con il consenso, per le promozioni;</li>
+                  <li>preparare statistiche interne in forma aggregata.</li>
                 </ul>
-                <p className="mt-4">
-                  La base giuridica di questo trattamento è l'esecuzione di misure precontrattuali e contrattuali (la richiesta di prenotazione del tavolo effettuata dall'utente) e il legittimo interesse del titolare a rispondere alle richieste di contatto.
+                <p className="mt-3">
+                  Al gestionale accedono solo le persone autorizzate di Papone Dal 1956 e di Partidea S.r.l., con credenziali personali. I dati non vengono venduti né diffusi e non sono usati per decisioni automatizzate che producano effetti giuridici su di te. Gestiamo è ospitato su infrastrutture di hosting scelte da Partidea S.r.l. con misure di sicurezza adeguate; eventuali trasferimenti fuori dall&apos;Unione Europea avvengono con le garanzie indicate al punto 9.
                 </p>
               </div>
 
               <div>
-                <h3 className="text-xl font-bold font-mono text-amber-400 mb-3 uppercase tracking-wider">4. Destinatari dei Dati e Terze Parti</h3>
+                <h2 className="text-xl font-bold font-mono text-amber-400 mb-3">5. Email, SMS e comunicazioni: Brevo</h2>
                 <p>
-                  I tuoi dati personali non vengono venduti o scambiati a scopo di marketing o profilazione da parte di terzi. Tuttavia, per il funzionamento sicuro del servizio, ci avvaliamo delle seguenti piattaforme:
+                  I dati del modulo di prenotazione vengono sincronizzati con Brevo, piattaforma di Sendinblue SAS, 106 boulevard Haussmann, 75008 Parigi (Francia), che tratta i dati come sub-responsabile su server situati nell&apos;Unione Europea. Usiamo Brevo per inviarti il riepilogo della prenotazione e, solo se hai dato il consenso, newsletter, offerte e inviti a eventi.
                 </p>
-                <ul className="list-disc list-inside mt-3 space-y-2 text-neutral-300 pl-4">
-                  <li><strong>Server hosting e infrastrutture Cloud:</strong> Per ospitare l'applicazione in modo sicuro.</li>
-                  <li><strong>WhatsApp (Meta Platforms, Inc.):</strong> Il servizio consente di reindirizzare i dettagli della prenotazione sul vostro account per completare l'invio del messaggio di prenotazione guidato.</li>
-                  <li><strong>Brevo (Sendinblue):</strong> Se configurato, per la spedizione di notifiche automatiche via email relative alle richieste ricevute.</li>
-                </ul>
-              </div>
-
-              <div>
-                <h3 className="text-xl font-bold font-mono text-amber-400 mb-3 uppercase tracking-wider">5. Durata della Conservazione dei Dati</h3>
-                <p>
-                  I dati relativi alle prenotazioni vengono conservati in un database locale cifrato sul server al fine di consentire ai gestori dell'attività di approvare o rifiutare la richiesta e tenere un registro della disponibilità. I dati vengono conservati per il tempo strettamente necessario all'esecuzione del servizio richiesto (solitamente non oltre 12 mesi dalla data della consumazione, salvo obblighi di legge o richieste esplicite di cancellazione da parte dell'utente).
+                <p className="mt-3">
+                  Brevo registra se un&apos;email è stata aperta e quali link sono stati cliccati, per capire quali messaggi sono utili e non inviarne di superflui. In ogni email promozionale trovi il link per disiscriverti; puoi anche scriverci a papone2018@gmail.com.
                 </p>
               </div>
 
               <div>
-                <h3 className="text-xl font-bold font-mono text-amber-400 mb-3 uppercase tracking-wider">6. Diritti degli Interessati</h3>
+                <h2 className="text-xl font-bold font-mono text-amber-400 mb-3">6. Tracciamenti Google</h2>
                 <p>
-                  In conformità con il Regolamento Generale sulla Protezione dei Dati (GDPR - Regolamento UE 2016/679), l'utente ha il diritto in qualunque momento di:
+                  Il sito utilizza o può utilizzare, solo dopo il tuo consenso, i seguenti servizi di Google Ireland Limited, Gordon House, Barrow Street, Dublino 4 (Irlanda):
                 </p>
-                <ul className="list-disc list-inside mt-3 space-y-2 text-neutral-300 pl-4">
-                  <li>Ottenere la conferma dell'esistenza di dati personali che lo riguardano e accedervi.</li>
-                  <li>Richiedere la rettifica, la cancellazione o la limitazione del trattamento dei dati.</li>
-                  <li>Opporsi al trattamento in qualsiasi momento per motivi legittimi.</li>
-                  <li>Ottenere la portabilità dei dati o revocare il consenso prestato in qualsiasi momento.</li>
+                <ul className="list-disc list-inside mt-3 space-y-2 text-neutral-300 pl-2">
+                  <li>Google Analytics 4: statistiche aggregate su pagine visitate, durata delle visite, provenienza e dispositivo. Google Analytics 4 non registra gli indirizzi IP; i dati sono conservati per 14 mesi.</li>
+                  <li>Google Ads: misura se un annuncio ha portato a una prenotazione e mostra annunci a chi ha già visitato il sito (remarketing).</li>
+                  <li>Google Tag Manager: strumento tecnico che carica gli altri servizi nel rispetto delle tue scelte.</li>
+                  <li>Google Maps: la mappa che indica dove ci troviamo viene caricata solo dopo il tuo consenso, perché può impostare cookie di Google.</li>
                 </ul>
-                <p className="mt-4">
-                  Per esercitare tali diritti, puoi contattare comodamente il titolare all'indirizzo email <a href="mailto:alessandro_doc@live.it" className="text-amber-400 underline hover:text-amber-500 transition">alessandro_doc@live.it</a>. Risponderemo tempestivamente a ogni tua richiesta.
+                <p className="mt-3">
+                  Usiamo Google Consent Mode v2: finché non dai il consenso, i servizi Google non salvano né leggono identificativi sul tuo dispositivo. Puoi gestire le preferenze sugli annunci su{" "}
+                  <a href="https://adssettings.google.com" target="_blank" rel="noopener noreferrer" className="text-amber-400 underline hover:text-amber-300">
+                    https://adssettings.google.com
+                  </a>.
                 </p>
+              </div>
+
+              <div className="space-y-4">
+                <h2 className="text-xl font-bold font-mono text-amber-400">7. Tracciamenti Meta (Facebook, Instagram, WhatsApp)</h2>
+
+                <div>
+                  <h3 className="text-lg font-bold text-white mb-2">7.1 Pixel di Meta e Conversions API</h3>
+                  <p>
+                    Il sito utilizza o può utilizzare, solo dopo il tuo consenso, il Pixel di Meta e la Conversions API di Meta Platforms Ireland Limited, Merrion Road, Dublino 4 (Irlanda). Servono a misurare i risultati delle campagne su Facebook e Instagram e a mostrare annunci a chi ha visitato il sito o ha prenotato. Con la Conversions API gli stessi eventi vengono inviati a Meta dal server invece che dal browser, in forma cifrata, e solo se hai dato il consenso. Per la raccolta e la trasmissione di questi dati il Titolare e Meta sono contitolari (art. 26 GDPR) sulla base dell&apos;accordo messo a disposizione da Meta; i trattamenti successivi sono responsabilità esclusiva di Meta.
+                  </p>
+                </div>
+
+                <div>
+                  <h3 className="text-lg font-bold text-white mb-2">7.2 Moduli di contatto su Facebook e Instagram</h3>
+                  <p>
+                    Se compili un modulo di contatto all&apos;interno di un nostro annuncio su Facebook o Instagram, i dati inseriti vengono raccolti da Meta, trasmessi a noi e registrati in Gestiamo per ricontattarti, con le stesse regole descritte in questa informativa.
+                  </p>
+                </div>
+
+                <div>
+                  <h3 className="text-lg font-bold text-white mb-2">7.3 Pubblico personalizzato</h3>
+                  <p>
+                    Solo se hai dato il consenso al marketing, email e telefono possono essere caricati su Meta e Google in forma cifrata (hash), per mostrarti annunci pertinenti o per escluderti da annunci che non ti riguardano. Le piattaforme usano questi dati solo per l&apos;abbinamento e poi li cancellano.
+                  </p>
+                </div>
+
+                <div>
+                  <h3 className="text-lg font-bold text-white mb-2">7.4 WhatsApp e le nostre pagine social</h3>
+                  <p>
+                    Dal modulo di prenotazione puoi scegliere di inviarci i dettagli direttamente su WhatsApp: in quel caso il messaggio parte dal tuo account e i dati sono trattati anche da WhatsApp Ireland Limited secondo la sua informativa. Per le statistiche delle nostre pagine Facebook e Instagram, il Titolare e Meta sono contitolari secondo l&apos;accordo &quot;Page Insights&quot; di Meta. I pulsanti del sito verso i nostri profili Instagram, Facebook e TikTok sono semplici link e non installano cookie finché non li clicchi.
+                  </p>
+                </div>
+              </div>
+
+              <div>
+                <h2 className="text-xl font-bold font-mono text-amber-400 mb-3">8. Allergie e intolleranze</h2>
+                <p>
+                  Se ci comunichi allergie, intolleranze o esigenze alimentari, le usiamo solo per preparare in sicurezza la tua serata. Trattandosi di dati sulla salute, li trattiamo solo con il tuo consenso esplicito (art. 9.2.a GDPR), li annotiamo nella prenotazione e li cancelliamo dopo il servizio, salvo che tu ci chieda di ricordarli per le volte successive. Non vengono mai inviati a Brevo, Google o Meta.
+                </p>
+              </div>
+
+              <div>
+                <h2 className="text-xl font-bold font-mono text-amber-400 mb-3">9. A chi comunichiamo i dati e trasferimenti fuori dall&apos;Unione Europea</h2>
+                <ul className="list-disc list-inside space-y-2 text-neutral-300 pl-2">
+                  <li>Persone autorizzate di Papone Dal 1956, vincolate alla riservatezza;</li>
+                  <li>Partidea S.r.l., Responsabile del trattamento (sito, Gestiamo, comunicazioni, campagne);</li>
+                  <li>Sendinblue SAS (Brevo), Google Ireland Limited, Meta Platforms Ireland Limited e WhatsApp Ireland Limited, per i servizi descritti;</li>
+                  <li>Vercel Inc. (Stati Uniti), fornitore di hosting del sito, e Cloudflare Inc. (Stati Uniti), che distribuisce alcuni file tecnici del sito;</li>
+                  <li>commercialista e consulenti, per gli adempimenti di legge;</li>
+                  <li>autorità pubbliche, quando la legge lo richiede.</li>
+                </ul>
+                <p className="mt-3">
+                  I dati non vengono venduti né diffusi. Alcuni fornitori (Google, Meta, Vercel, Cloudflare) possono trasferire dati negli Stati Uniti: questi trasferimenti si basano sulla decisione di adeguatezza della Commissione Europea del 10 luglio 2023 sull&apos;EU-U.S. Data Privacy Framework, per le società certificate, e, dove serve, sulle Clausole Contrattuali Standard approvate dalla Commissione (art. 46 GDPR).
+                </p>
+              </div>
+
+              <div>
+                <h2 className="text-xl font-bold font-mono text-amber-400 mb-3">10. Per quanto tempo conserviamo i dati</h2>
+                <ul className="list-disc list-inside space-y-2 text-neutral-300 pl-2">
+                  <li>Prenotazioni e storico cliente in Gestiamo: 24 mesi dall&apos;ultima prenotazione;</li>
+                  <li>Allergie e intolleranze: fino alla fine del servizio, salvo tua richiesta di ricordarle;</li>
+                  <li>Richieste di contatto non seguite da prenotazione: 12 mesi;</li>
+                  <li>Newsletter e promozioni: fino alla revoca del consenso, con verifica almeno ogni 24 mesi;</li>
+                  <li>Documenti fiscali e contabili: 10 anni (art. 2220 Codice civile);</li>
+                  <li>Statistiche di Google Analytics: 14 mesi;</li>
+                  <li>Cookie: per le durate indicate nella Cookie Policy;</li>
+                  <li>Log tecnici di sicurezza: fino a 12 mesi.</li>
+                </ul>
+                <p className="mt-3">
+                  Scaduti questi tempi, i dati vengono cancellati o resi anonimi.
+                </p>
+              </div>
+
+              <div>
+                <h2 className="text-xl font-bold font-mono text-amber-400 mb-3">11. I tuoi diritti</h2>
+                <p>
+                  Puoi chiederci in ogni momento di accedere ai tuoi dati, correggerli, cancellarli, limitarne l&apos;uso, riceverli in un formato leggibile (portabilità) e opporti al loro uso per marketing o basato sul legittimo interesse (artt. 15-22 GDPR). Puoi revocare un consenso quando vuoi, senza conseguenze su quanto fatto prima (art. 7.3 GDPR). Basta scrivere a papone2018@gmail.com o alla PEC radicisrl26@pec.it: ti rispondiamo entro 30 giorni. Puoi anche presentare reclamo al Garante per la protezione dei dati personali, Piazza Venezia 11, 00187 Roma – www.garanteprivacy.it.
+                </p>
+              </div>
+
+              <div>
+                <h2 className="text-xl font-bold font-mono text-amber-400 mb-3">12. Altre informazioni</h2>
+                <ul className="list-disc list-inside space-y-2 text-neutral-300 pl-2">
+                  <li>Obbligatorietà: nome, telefono e dettagli della prenotazione servono a gestirla. Il consenso a marketing e cookie non tecnici è facoltativo: se lo neghi puoi comunque usare il sito e prenotare.</li>
+                  <li>Decisioni automatizzate: non prendiamo decisioni basate solo su trattamenti automatizzati. La personalizzazione degli annunci avviene solo con il tuo consenso.</li>
+                  <li>Sicurezza: usiamo connessione cifrata (HTTPS), accessi personali al gestionale e alle piattaforme, backup e aggiornamenti periodici.</li>
+                  <li>Minori: i servizi del sito non sono rivolti a minori di 14 anni.</li>
+                  <li>Modifiche: la data in alto indica l&apos;ultima versione; segnaleremo sul sito le modifiche importanti.</li>
+                </ul>
               </div>
             </div>
             
@@ -1895,83 +2117,129 @@ export default function App() {
         <section className="section-padding bg-neutral-900 text-white min-h-screen pt-32 pb-24">
           <div className="container max-w-4xl mx-auto px-4">
             <div className="mb-12 text-center md:text-left">
-              <span className="section-label bebas text-amber-400 tracking-wider">GESTIONE DEI COOKIE</span>
-              <h1 className="text-4xl font-extrabold mt-2 text-white font-sans tracking-tight">Cookie Policy</h1>
-              <p className="text-sm text-neutral-400 font-mono mt-2">Ultimo aggiornamento: 20 maggio 2026</p>
+              <h1 className="text-4xl font-extrabold text-white font-sans tracking-tight">COOKIE POLICY</h1>
+              <p className="text-sm text-neutral-400 font-mono mt-2">Ultimo aggiornamento: 23 novembre 2026</p>
             </div>
             
             <div className="prose prose-invert max-w-none text-neutral-300 space-y-8 font-sans leading-relaxed">
+              <p>
+                Questa pagina spiega quali cookie e strumenti simili usa questo sito, gestito da Radici S.r.l. per il marchio Papone Dal 1956 (dati di contatto nella Privacy Policy), secondo l&apos;art. 122 del Codice Privacy e le Linee guida del Garante del 10 giugno 2021.
+              </p>
+
               <div>
-                <h3 className="text-xl font-bold font-mono text-amber-400 mb-3 uppercase tracking-wider">1. Cosa sono i Cookie</h3>
+                <h2 className="text-xl font-bold font-mono text-amber-400 mb-3">Cosa sono i cookie</h2>
                 <p>
-                  I cookie sono piccoli file di testo che i siti visitati inviano e registrano sul computer o dispositivo mobile dell'utente, per essere poi ritrasmessi agli stessi siti alla visita successiva. Grazie ai cookie, il sito ricorda le tue azioni e preferenze (come dettagli di visualizzazione, impostazioni, consensi) in modo che tu non debba reinserirle quando ritorni sul sito o navighi da una pagina all'altra.
+                  Sono piccoli file che il sito salva sul tuo dispositivo. Strumenti simili (pixel, tag, local storage) funzionano allo stesso modo e seguono le stesse regole.
                 </p>
               </div>
 
               <div>
-                <h3 className="text-xl font-bold font-mono text-amber-400 mb-3 uppercase tracking-wider">2. Come utilizziamo i Cookie</h3>
+                <h2 className="text-xl font-bold font-mono text-amber-400 mb-3">Quali usiamo</h2>
+                <ul className="list-disc list-inside space-y-2 text-neutral-300 pl-2">
+                  <li>Cookie tecnici: fanno funzionare il sito e il modulo di prenotazione e ricordano le tue scelte sul banner. Non richiedono consenso.</li>
+                  <li>Cookie statistici: Google Analytics 4, solo se attivo e solo con il tuo consenso.</li>
+                  <li>Cookie di marketing: Google Ads e Pixel di Meta, solo se attivi e solo con il tuo consenso.</li>
+                  <li>Contenuti di terze parti: la mappa di Google Maps, caricata solo dopo il tuo consenso.</li>
+                </ul>
+              </div>
+
+              <div>
+                <h2 className="text-xl font-bold font-mono text-amber-400 mb-3">Elenco dei cookie</h2>
+                <div className="overflow-x-auto rounded-xl border border-neutral-800">
+                  <table className="w-full text-left border-collapse text-sm">
+                    <thead>
+                      <tr className="bg-neutral-950 text-amber-400 border-b border-neutral-800">
+                        <th className="p-3 font-bold">Nome</th>
+                        <th className="p-3 font-bold">Fornitore</th>
+                        <th className="p-3 font-bold">A cosa serve</th>
+                        <th className="p-3 font-bold">Durata</th>
+                        <th className="p-3 font-bold">Tipo</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-neutral-800 bg-neutral-950/40">
+                      <tr>
+                        <td className="p-3 font-mono text-xs">cookie del banner</td>
+                        <td className="p-3">Papone Dal 1956</td>
+                        <td className="p-3">Ricorda le tue scelte sul consenso</td>
+                        <td className="p-3">6 mesi</td>
+                        <td className="p-3">Tecnico</td>
+                      </tr>
+                      <tr>
+                        <td className="p-3 font-mono text-xs">_ga</td>
+                        <td className="p-3">Google</td>
+                        <td className="p-3">Distingue i visitatori a fini statistici</td>
+                        <td className="p-3">2 anni</td>
+                        <td className="p-3">Statistico</td>
+                      </tr>
+                      <tr>
+                        <td className="p-3 font-mono text-xs">ga*</td>
+                        <td className="p-3">Google</td>
+                        <td className="p-3">Mantiene la sessione di Google Analytics</td>
+                        <td className="p-3">2 anni</td>
+                        <td className="p-3">Statistico</td>
+                      </tr>
+                      <tr>
+                        <td className="p-3 font-mono text-xs">_gcl_au</td>
+                        <td className="p-3">Google</td>
+                        <td className="p-3">Misura le conversioni di Google Ads</td>
+                        <td className="p-3">3 mesi</td>
+                        <td className="p-3">Marketing</td>
+                      </tr>
+                      <tr>
+                        <td className="p-3 font-mono text-xs">IDE, test_cookie</td>
+                        <td className="p-3">Google (doubleclick.net)</td>
+                        <td className="p-3">Remarketing e misurazione degli annunci</td>
+                        <td className="p-3">fino a 13 mesi</td>
+                        <td className="p-3">Marketing</td>
+                      </tr>
+                      <tr>
+                        <td className="p-3 font-mono text-xs">_fbp</td>
+                        <td className="p-3">Meta</td>
+                        <td className="p-3">Identifica il browser per il Pixel di Meta</td>
+                        <td className="p-3">3 mesi</td>
+                        <td className="p-3">Marketing</td>
+                      </tr>
+                      <tr>
+                        <td className="p-3 font-mono text-xs">_fbc</td>
+                        <td className="p-3">Meta</td>
+                        <td className="p-3">Registra il clic su un annuncio Meta</td>
+                        <td className="p-3">3 mesi</td>
+                        <td className="p-3">Marketing</td>
+                      </tr>
+                      <tr>
+                        <td className="p-3 font-mono text-xs">fr</td>
+                        <td className="p-3">Meta (facebook.com)</td>
+                        <td className="p-3">Annunci e misurazione su Facebook e Instagram</td>
+                        <td className="p-3">3 mesi</td>
+                        <td className="p-3">Marketing</td>
+                      </tr>
+                      <tr>
+                        <td className="p-3 font-mono text-xs">NID e altri</td>
+                        <td className="p-3">Google Maps</td>
+                        <td className="p-3">Funzionamento della mappa incorporata</td>
+                        <td className="p-3">6 mesi</td>
+                        <td className="p-3">Terza parte</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <p className="mt-3 text-sm text-neutral-300">
+                  Le durate sono indicate dai fornitori e possono cambiare. I cookie statistici e di marketing vengono installati solo se il relativo servizio è attivo sul sito e solo dopo il tuo consenso.
+                </p>
+              </div>
+
+              <div>
+                <h2 className="text-xl font-bold font-mono text-amber-400 mb-3">Come scegli</h2>
                 <p>
-                  Il sito di Papone Dal 1956 utilizza i cookie per migliorare l'esperienza utente, permettere il funzionamento del carrello o dei moduli di prenotazione, ricordare lo stato del consenso relativo ai cookie stessi e proteggere l'infrastruttura di rete.
+                  Al primo accesso il banner ti permette di accettare tutti i cookie, rifiutarli tutti o scegliere per categoria. Chiudendo il banner con la X continui con i soli cookie tecnici. Nessun cookie statistico o di marketing viene installato prima della tua scelta, e scorrere la pagina non vale come consenso. Il banner non ti viene riproposto prima di 6 mesi, salvo cambiamenti nei cookie usati. Puoi cambiare idea quando vuoi dal link &quot;Gestisci preferenze cookie&quot; in fondo a ogni pagina.
                 </p>
                 <p className="mt-3">
-                  I cookie si dividono comunemente in cookie di prima parte (installati direttamente dal gestore del sito) e cookie di terza parte (installati da servizi esterni integrati nel sito).
+                  Puoi anche cancellare o bloccare i cookie dalle impostazioni del browser (Chrome, Firefox, Safari, Edge): bloccare quelli tecnici può però impedire il corretto funzionamento del sito e della prenotazione. Per le preferenze sugli annunci:{" "}
+                  <a href="https://adssettings.google.com" target="_blank" rel="noopener noreferrer" className="text-amber-400 underline hover:text-amber-300">
+                    https://adssettings.google.com
+                  </a>{" "}
+                  e le impostazioni inserzioni del tuo account Meta.
                 </p>
-              </div>
-
-              <div>
-                <h3 className="text-xl font-bold font-mono text-amber-400 mb-3 uppercase tracking-wider">3. Tipologie di Cookie usati su questo Sito</h3>
-                <p className="mb-4">
-                  Puoi decidere in qualsiasi momento quali categorie abilitare attraverso lo strumento di gestione disponibile in questa pagina o tramite il link nel footer.
-                </p>
-                
-                <div className="space-y-4">
-                  <div className="p-5 rounded-2xl bg-neutral-950 border border-neutral-800">
-                    <div className="flex justify-between items-center mb-2">
-                      <span className="font-bold text-white text-lg">A. Cookie Tecnici / Necessari (Sempre Attivi)</span>
-                      <span className="text-xs bg-green-950 text-green-400 border border-green-800 px-3 py-1 rounded-full font-bold uppercase">Obbligatori</span>
-                    </div>
-                    <p className="text-sm text-neutral-400 leading-relaxed">
-                      Questi cookie sono essenziali per il corretto funzionamento del sito. Includono, ad esempio, i file di sessione che tengono traccia della compilazione dei moduli di prenotazione, dello stato del consenso relativo ai cookie (per non mostrare nuovamente il banner ad ogni pagina). Senza questi cookie, parti del sito non funzionerebbero correttamente.
-                    </p>
-                  </div>
-
-                  <div className="p-5 rounded-2xl bg-neutral-950 border border-neutral-800">
-                    <div className="flex justify-between items-center mb-4">
-                      <span className="font-bold text-white text-lg">B. Cookie Statistici / Analitici (Opzionali)</span>
-                      <span className={`text-xs px-3 py-1 rounded-full font-bold uppercase ${cookieConsent.statistici ? "bg-green-950 text-green-400 border border-green-800" : "bg-neutral-800 text-neutral-400 border border-neutral-700"}`}>
-                        {cookieConsent.statistici ? "Attivi (Abilitati)" : "Disattivi"}
-                      </span>
-                    </div>
-                    <p className="text-sm text-neutral-400 leading-relaxed">
-                      Questi cookie raccolgono informazioni in forma anonima e aggregata sull'utilizzo del sito da parte degli utenti (ad esempio: quali pagine vengono visitate più spesso, tempo di permanenza sul sito, origini di provenienza del traffico). Utilizziamo questi dati solo per scopi statistici e per ottimizzare la stesura dei contenuti e la velocità di caricamento delle pagine.
-                    </p>
-                  </div>
-
-                  <div className="p-5 rounded-2xl bg-neutral-950 border border-neutral-800">
-                    <div className="flex justify-between items-center mb-4">
-                      <span className="font-bold text-white text-lg">C. Cookie di Profilazione o Marketing (Opzionali)</span>
-                      <span className={`text-xs px-3 py-1 rounded-full font-bold uppercase ${cookieConsent.marketing ? "bg-green-950 text-green-400 border border-green-800" : "bg-neutral-800 text-neutral-400 border border-neutral-700"}`}>
-                        {cookieConsent.marketing ? "Attivi (Abilitati)" : "Disattivi"}
-                      </span>
-                    </div>
-                    <p className="text-sm text-neutral-400 leading-relaxed">
-                      Questi cookie permettono di integrare servizi forniti da terze parti che potrebbero raccogliere informazioni sulla navigazione allo scopo di mostrare annunci pubblicitari pertinenti o tracciare interazioni con elementi social inseriti nelle pagine (come la visualizzazione di mappe incorporate Google Maps o video).
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <div>
-                <h3 className="text-xl font-bold font-mono text-amber-400 mb-3 uppercase tracking-wider">4. Come modificare le preferenze cookie dal Browser</h3>
-                <p>
-                  La maggior parte dei browser moderni consente di configurare la modalità di accettazione o blocco generale dei cookie. Ecco i collegamenti alle guide ufficiali dei browser principali:
-                </p>
-                <ul className="list-disc list-inside mt-3 space-y-1 text-neutral-300 text-sm pl-4">
-                  <li><a href="https://support.google.com/chrome/answer/95647" target="_blank" rel="noopener noreferrer" className="text-amber-400 underline hover:text-amber-500">Google Chrome</a></li>
-                  <li><a href="https://support.mozilla.org/it/kb/Attivare%20e%20disattivare%20i%20cookie" target="_blank" rel="noopener noreferrer" className="text-amber-400 underline hover:text-amber-500">Mozilla Firefox</a></li>
-                  <li><a href="https://support.apple.com/it-it/guide/safari/sfri11471/mac" target="_blank" rel="noopener noreferrer" className="text-amber-400 underline hover:text-amber-500">Apple Safari</a></li>
-                  <li><a href="https://support.microsoft.com/it-it/microsoft-edge/eliminare-e-gestire-i-cookie-in-microsoft-edge-168dab11-0753-043d-7c16-ede5947fc64d" target="_blank" rel="noopener noreferrer" className="text-amber-400 underline hover:text-amber-500">Microsoft Edge</a></li>
-                </ul>
               </div>
             </div>
             
@@ -2086,8 +2354,8 @@ export default function App() {
 
           {/* BOTTOM COPYRIGHT ROW */}
           <div className="footer-bottom">
-            <p>&copy; {new Date().getFullYear()} Papone Dal 1956. Tutti i diritti riservati.</p>
-            <div className="footer-legal">
+            <p className="w-full text-center leading-relaxed">
+              &copy; 2026 Papone Dal 1956 – Radici S.r.l. – P.IVA 04585110713 – Via Trinitapoli 24, 71121 Foggia &middot;{" "}
               <a 
                 href="#privacy" 
                 onClick={(e) => { 
@@ -2095,10 +2363,11 @@ export default function App() {
                   setActiveTab("privacy"); 
                   window.scrollTo({ top: 0, behavior: "smooth" }); 
                 }}
-                className={activeTab === "privacy" ? "text-amber-400 font-bold" : ""}
+                className={activeTab === "privacy" ? "text-amber-400 font-bold underline" : "hover:text-white underline"}
               >
                 Privacy Policy
               </a>
+              {" "}&middot;{" "}
               <a 
                 href="#cookie" 
                 onClick={(e) => { 
@@ -2106,61 +2375,87 @@ export default function App() {
                   setActiveTab("cookie"); 
                   window.scrollTo({ top: 0, behavior: "smooth" }); 
                 }}
-                className={activeTab === "cookie" ? "text-amber-400 font-bold" : ""}
+                className={activeTab === "cookie" ? "text-amber-400 font-bold underline" : "hover:text-white underline"}
               >
                 Cookie Policy
               </a>
+              {" "}&middot;{" "}
               <a 
                 href="#gestisci-cookie" 
                 onClick={(e) => { 
                   e.preventDefault(); 
-                  setShowCookieModal(true); 
+                  setShowCookieModal(false);
+                  setShowCookieBanner(true); 
                 }}
-                className="hover:text-amber-400 cursor-pointer"
+                className="hover:text-white cursor-pointer underline"
               >
                 Gestisci preferenze cookie
               </a>
-            </div>
+            </p>
           </div>
         </div>
       </footer>
 
       {/* ======================= COOKIE CONSENT BANNER ======================= */}
       {showCookieBanner && (
-        <div className="fixed bottom-4 left-4 right-4 md:left-auto md:right-4 md:max-w-md bg-neutral-950/95 backdrop-blur-md border border-neutral-800 text-white p-6 rounded-2xl shadow-2xl z-40 animate-fade-in font-sans">
-          <div className="flex items-center gap-3 mb-3">
-            <div className="w-8 h-8 rounded-full bg-amber-500/20 text-amber-400 flex items-center justify-center">
+        <div className="fixed bottom-4 left-4 right-4 md:left-auto md:right-4 md:max-w-md bg-neutral-950/95 backdrop-blur-md border border-neutral-800 text-white p-6 rounded-2xl shadow-2xl z-40 animate-fade-in font-sans relative">
+          <button
+            type="button"
+            onClick={() => saveCookiePreferences(true, false, false)}
+            aria-label="Chiudi e continua senza cookie non tecnici"
+            title="Chiudi"
+            className="absolute top-3.5 right-3.5 text-neutral-400 hover:text-white bg-neutral-900/70 hover:bg-neutral-800 w-8 h-8 rounded-full flex items-center justify-center transition border border-neutral-800 cursor-pointer"
+          >
+            <i className="fas fa-times"></i>
+          </button>
+
+          <div className="flex items-center gap-3 mb-3 pr-8">
+            <div className="w-8 h-8 rounded-full bg-amber-500/20 text-amber-400 flex items-center justify-center shrink-0">
               <i className="fas fa-cookie-bite"></i>
             </div>
             <h5 className="font-bold font-mono text-lg text-white">Informativa sui Cookie</h5>
           </div>
           <p className="text-xs text-neutral-300 leading-relaxed mb-4">
-            Utilizziamo cookie tecnici essenziali per il corretto funzionamento del sito. Con il tuo consenso, vorremmo utilizzare anche cookie analitici anonimi e di profilazione marketing terzi per migliorare la tua esperienza.
+            Usiamo cookie tecnici per far funzionare il sito e, solo con il tuo consenso, cookie statistici e di marketing di Google e Meta per capire come viene usato il sito e mostrarti annunci pertinenti. Puoi accettarli, rifiutarli o scegliere quali attivare; chiudendo con la X continui senza cookie non tecnici. Maggiori dettagli nella{" "}
+            <a
+              href="#cookie"
+              onClick={(e) => {
+                e.preventDefault();
+                setActiveTab("cookie");
+                window.scrollTo({ top: 0, behavior: "smooth" });
+              }}
+              className="text-amber-400 underline hover:text-amber-300"
+            >
+              Cookie Policy
+            </a>.
           </p>
           <div className="flex flex-col gap-2">
-            <button 
-              onClick={() => saveCookiePreferences(true, true, true)}
-              className="w-full bg-amber-500 hover:bg-amber-400 text-neutral-950 font-bold py-2.5 rounded-xl transition cursor-pointer bebas text-sm tracking-wider"
-            >
-              ACCETTA TUTTI I COOKIE
-            </button>
             <div className="grid grid-cols-2 gap-2">
               <button 
-                onClick={() => saveCookiePreferences(true, false, false)}
-                className="bg-neutral-800 hover:bg-neutral-700 text-white font-bold py-2 rounded-xl transition cursor-pointer bebas text-sm tracking-wider"
+                type="button"
+                onClick={() => saveCookiePreferences(true, true, true)}
+                className="w-full bg-amber-500 hover:bg-amber-400 text-neutral-950 font-bold py-2.5 px-3 rounded-xl transition cursor-pointer bebas text-sm tracking-wider"
               >
-                SOLO NECESSARI
+                Accetta tutti
               </button>
               <button 
-                onClick={() => {
-                  setShowCookieBanner(false);
-                  setShowCookieModal(true);
-                }}
-                className="border border-neutral-700 hover:bg-neutral-900 text-white font-bold py-2 rounded-xl transition cursor-pointer bebas text-sm tracking-wider"
+                type="button"
+                onClick={() => saveCookiePreferences(true, false, false)}
+                className="w-full bg-amber-500 hover:bg-amber-400 text-neutral-950 font-bold py-2.5 px-3 rounded-xl transition cursor-pointer bebas text-sm tracking-wider"
               >
-                PERSONALIZZA
+                Rifiuta tutti
               </button>
             </div>
+            <button 
+              type="button"
+              onClick={() => {
+                setShowCookieBanner(false);
+                setShowCookieModal(true);
+              }}
+              className="w-full border border-neutral-700 hover:bg-neutral-900 text-white font-bold py-2 rounded-xl transition cursor-pointer bebas text-sm tracking-wider"
+            >
+              Personalizza
+            </button>
           </div>
         </div>
       )}
@@ -2170,8 +2465,9 @@ export default function App() {
         <div className="fixed inset-0 bg-black/85 backdrop-blur-sm z-50 flex items-center justify-center p-4">
           <div className="w-full max-w-xl bg-neutral-950 border border-neutral-800 text-white p-6 md:p-8 rounded-2xl shadow-2xl font-sans relative animate-fade-in">
             <button 
+              type="button"
               onClick={() => setShowCookieModal(false)}
-              className="absolute top-4 right-4 text-neutral-400 hover:text-white bg-neutral-900/50 hover:bg-neutral-900 w-8 h-8 rounded-full flex items-center justify-center transition border border-neutral-800"
+              className="absolute top-4 right-4 text-neutral-400 hover:text-white bg-neutral-900/50 hover:bg-neutral-900 w-8 h-8 rounded-full flex items-center justify-center transition border border-neutral-800 cursor-pointer"
               title="Chiudi"
             >
               <i className="fas fa-times"></i>
@@ -2186,85 +2482,117 @@ export default function App() {
             </div>
 
             <div className="space-y-4 max-h-[60vh] overflow-y-auto pr-2">
-              {/* Category 1 */}
+              {/* Category 1: Tecnici */}
               <div className="p-4 rounded-xl bg-neutral-900 border border-neutral-800 flex items-start justify-between gap-4">
                 <div className="space-y-1">
                   <div className="flex items-center gap-2">
-                    <span className="font-bold text-white text-sm">Cookie Tecnici / Essenziali</span>
-                    <span className="text-[10px] bg-green-950 text-green-400 border border-green-800 px-2 py-0.5 rounded-full font-bold uppercase">Sempre Attivi</span>
+                    <span className="font-bold text-white text-sm">Tecnici</span>
+                    <span className="text-[11px] text-green-400 font-bold">Sempre attivi</span>
                   </div>
                   <p className="text-xs text-neutral-400 leading-relaxed">
-                    Indispensabili per navigare sul sito, registrare i vostri consensi e consentire l'utilizzo sicuro dei moduli di prenotazione. Non possono essere disattivati.
+                    Fanno funzionare il sito e il modulo di prenotazione e ricordano le tue scelte sul banner. Non richiedono consenso e non possono essere disattivati.
                   </p>
                 </div>
                 <div className="shrink-0 pt-1">
-                  <input type="checkbox" checked disabled className="w-4 h-4 accent-amber-500 opacity-60" />
+                  <button
+                    type="button"
+                    role="switch"
+                    aria-checked={true}
+                    aria-label="Cookie Tecnici (sempre attivi)"
+                    disabled
+                    className="relative inline-flex h-6 w-11 items-center rounded-full bg-amber-500/60 opacity-75 cursor-not-allowed"
+                  >
+                    <span className="inline-block h-4 w-4 transform translate-x-6 rounded-full bg-neutral-950 transition" />
+                  </button>
                 </div>
               </div>
 
-              {/* Category 2 */}
+              {/* Category 2: Statistici */}
               <div 
                 className="p-4 rounded-xl bg-neutral-900 border border-neutral-800 flex items-start justify-between gap-4 cursor-pointer hover:border-neutral-700 transition"
                 onClick={() => setTempStatistici(!tempStatistici)}
               >
                 <div className="space-y-1">
-                  <span className="font-bold text-white text-sm">Cookie Statistici / Analitici</span>
+                  <span className="font-bold text-white text-sm">Statistici</span>
                   <p className="text-xs text-neutral-400 leading-relaxed">
-                    Ci consentono di misurare il numero di visite e analizzare le fonti del traffico in modo del tutto aggregato e anonimo. Se disattivati non potremo ottimizzare l'esperienza di navigazione.
+                    Google Analytics 4: statistiche aggregate su pagine visitate, durata delle visite, provenienza e dispositivo. Attivati solo con il tuo consenso.
                   </p>
                 </div>
                 <div className="shrink-0 pt-1" onClick={(e) => e.stopPropagation()}>
-                  <input 
-                    type="checkbox" 
+                  <button
+                    type="button"
                     id="consent-statistici"
-                    checked={tempStatistici} 
-                    onChange={(e) => setTempStatistici(e.target.checked)} 
-                    className="w-4 h-4 accent-amber-500 cursor-pointer" 
-                  />
+                    role="switch"
+                    aria-checked={tempStatistici}
+                    aria-label="Cookie Statistici"
+                    onClick={() => setTempStatistici(!tempStatistici)}
+                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition cursor-pointer ${
+                      tempStatistici ? "bg-amber-500" : "bg-neutral-700"
+                    }`}
+                  >
+                    <span
+                      className={`inline-block h-4 w-4 transform rounded-full bg-white transition ${
+                        tempStatistici ? "translate-x-6" : "translate-x-1"
+                      }`}
+                    />
+                  </button>
                 </div>
               </div>
 
-              {/* Category 3 */}
+              {/* Category 3: Marketing */}
               <div 
                 className="p-4 rounded-xl bg-neutral-900 border border-neutral-800 flex items-start justify-between gap-4 cursor-pointer hover:border-neutral-700 transition"
                 onClick={() => setTempMarketing(!tempMarketing)}
               >
                 <div className="space-y-1">
-                  <span className="font-bold text-white text-sm">Cookie di Profilazione e Marketing</span>
+                  <span className="font-bold text-white text-sm">Marketing</span>
                   <p className="text-xs text-neutral-400 leading-relaxed">
-                    Utilizzati da partner terzi (come Google Maps incorporata) per fornirti contenuti pertinenti ed elementi social integrati adatti alle tue preferenze di navigazione.
+                    Google Ads, Pixel di Meta e contenuti di terze parti (mappa Google Maps). Attivati solo con il tuo consenso.
                   </p>
                 </div>
                 <div className="shrink-0 pt-1" onClick={(e) => e.stopPropagation()}>
-                  <input 
-                    type="checkbox" 
+                  <button
+                    type="button"
                     id="consent-marketing"
-                    checked={tempMarketing} 
-                    onChange={(e) => setTempMarketing(e.target.checked)} 
-                    className="w-4 h-4 accent-amber-500 cursor-pointer" 
-                  />
+                    role="switch"
+                    aria-checked={tempMarketing}
+                    aria-label="Cookie Marketing"
+                    onClick={() => setTempMarketing(!tempMarketing)}
+                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition cursor-pointer ${
+                      tempMarketing ? "bg-amber-500" : "bg-neutral-700"
+                    }`}
+                  >
+                    <span
+                      className={`inline-block h-4 w-4 transform rounded-full bg-white transition ${
+                        tempMarketing ? "translate-x-6" : "translate-x-1"
+                      }`}
+                    />
+                  </button>
                 </div>
               </div>
             </div>
 
             <div className="mt-8 pt-4 border-t border-neutral-800 flex flex-col sm:flex-row gap-3 justify-end text-sm">
               <button 
+                type="button"
                 onClick={() => saveCookiePreferences(true, true, true)}
                 className="w-full sm:w-auto bg-amber-500 hover:bg-amber-400 text-neutral-950 font-bold px-6 py-2.5 rounded-xl transition cursor-pointer text-center bebas text-base tracking-wider"
               >
-                ACCETTA TUTTI
+                Accetta tutti
               </button>
               <button 
+                type="button"
+                onClick={() => saveCookiePreferences(true, false, false)}
+                className="w-full sm:w-auto bg-amber-500 hover:bg-amber-400 text-neutral-950 font-bold px-6 py-2.5 rounded-xl transition cursor-pointer text-center bebas text-base tracking-wider"
+              >
+                Rifiuta tutti
+              </button>
+              <button 
+                type="button"
                 onClick={() => saveCookiePreferences(true, tempStatistici, tempMarketing)}
                 className="w-full sm:w-auto bg-neutral-800 hover:bg-neutral-700 text-white border border-neutral-700 font-bold px-6 py-2.5 rounded-xl transition cursor-pointer text-center bebas text-base tracking-wider"
               >
-                SALVA PREFERENZE
-              </button>
-              <button 
-                onClick={() => setShowCookieModal(false)}
-                className="w-full sm:w-auto bg-transparent hover:bg-neutral-900 border border-neutral-800 hover:border-neutral-700 text-neutral-400 hover:text-white font-medium px-6 py-2.5 rounded-xl transition cursor-pointer text-center bebas text-base tracking-wider"
-              >
-                ANNULLA
+                Salva preferenze
               </button>
             </div>
           </div>
