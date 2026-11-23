@@ -33,7 +33,18 @@ function saveBookings(bookings: any[]) {
 
 // 1. POST /api/booking - Create a booking
 app.post("/api/booking", (req, res) => {
-  const { nome, cognome, email, tel, data, ora, persone, note } = req.body;
+  const {
+    nome,
+    cognome,
+    email,
+    tel,
+    data,
+    ora,
+    persone,
+    note,
+    consensoAllergie,
+    consensoPromozioni,
+  } = req.body;
   
   if (!nome || !cognome || !tel || !data || !persone) {
     return res.status(400).json({ error: "Campi obbligatori mancanti" });
@@ -50,6 +61,8 @@ app.post("/api/booking", (req, res) => {
     ora: ora || "19:30",
     persone,
     note: note || "",
+    consensoAllergie: Boolean(consensoAllergie),
+    consensoPromozioni: Boolean(consensoPromozioni),
     status: "In attesa", // "In attesa", "Confermato", "Cancellato"
     createdAt: new Date().toISOString()
   };
